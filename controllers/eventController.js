@@ -79,6 +79,10 @@ const addMoment = asyncHandler(async (req, res) => {
         console.log(newEvent);
         const user = await User.findById(decoded.userId);
         if (user) {
+            // To increase the marks of publisher,
+            let markToUpdate = user.marks;
+            markToUpdate += 10;
+            user.marks = markToUpdate;
             user.addedMoments.push(newEvent._id); // Assuming newEvent._id is the ObjectId of the newly created event
             await user.save();
         } else {
@@ -294,8 +298,8 @@ const addMoment = asyncHandler(async (req, res) => {
 
 const getMoments = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    const { latitude, longitude, longitudeDelta, latitudeDelta, selectedDate, justNow, usertime,userDate } = req.body;
-     console.log("mmmmmmmmmmmmmmmmm", req.body)
+    const { latitude, longitude, longitudeDelta, latitudeDelta, selectedDate, justNow, usertime, userDate } = req.body;
+    console.log("mmmmmmmmmmmmmmmmm", req.body)
 
     try {
         let events;
@@ -329,7 +333,7 @@ const getMoments = asyncHandler(async (req, res) => {
         }
 
 
-       // console.log(events);
+        // console.log(events);
 
         events = events.filter((event) => {
             if (event.date === userDate) {
@@ -415,16 +419,16 @@ const getPost = asyncHandler(async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = 10;
     const startIndex = (page - 1) * limit;
-    console.log("page", page,limit,startIndex);
+    console.log("page", page, limit, startIndex);
     //sri lanka colombo time
- //   console.log(id)
+    //   console.log(id)
     let eventsArray = [];
     try {
         const user = await User.findById(id);
         if (user) {
             //compare each events distance with user current location and return
             const events = await Event.find({
-                date: { $gte: new Date().toISOString().slice(0, 10)} ,
+                date: { $gte: new Date().toISOString().slice(0, 10) },
             }).exec();
             for (let i = 0; i < events.length; i++) {
                 let event = events[i];
@@ -561,6 +565,16 @@ const deleteEvent = asyncHandler(async (req, res) => {
     const { id } = req.params;  // Assuming the event ID is in the URL parameters
     console.log(id);
     try {
+        // Find the user and decrease the total marks
+        const event = await Event.findById(id);
+        const userId = event.publisherId;
+        const user = await User.findById(userId);
+        user.addedMoments = user.addedMoments.filter(momentId => momentId.toString() !== id.toString());
+        let markToUpdate = user.marks;
+        markToUpdate -= 10;
+        user.marks = markToUpdate;
+        await user.save();
+
         // Find the event by ID and delete it
         await Event.findByIdAndDelete(id);
 
@@ -593,6 +607,13 @@ const createPost = asyncHandler(async (req, res) => {
         await Event.findByIdAndUpdate(eventId, {
             $push: { post: newPost._id }, // Corrected 'posts' to 'post'
         });
+
+        // Find the post publisher and increase his mark
+        const user = await User.findById(userId);
+        let markToUpdate = user.marks;
+        markToUpdate += 5;
+        user.marks = markToUpdate;
+        await user.save();
 
         res.status(201).json({
             success: true,
@@ -780,26 +801,41 @@ const selectLeaderBoard = asyncHandler(async (req, res) => {
     console.log(id);
     try {
         // get all events and post of each users and multiply by 10 and 5 respectively and save the total to the marks in user model and sort by descending order and get top 10 users
-        const users = await User.find({}).sort({ createdAt: -1 });
-        let myMarks = 0;
-        let fName = '';
-        let leaderBoard = [];
-        for (let i = 0; i < users.length; i++) {
-            let user = users[i];
+        // const users = await User.find({}).sort({ createdAt: -1 });
+        // let myMarks = 0;
+        // let fName = '';
+        // let leaderBoard = [];
+        // for (let i = 0; i < users.length; i++) {
+        //     let user = users[i];
 
-            const events = await Event.find({ publisherId: user._id });
-            const posts = await Post.find({ publisherId: user._id });
-            let total = events.length * 10 + posts.length * 5;
-            if (user._id == id) {
-                myMarks = total;
-                fName = user.firstName + " " + user.lastName;
-            }
-            // leaderBoard.push({user:user,total:total});
-            leaderBoard.push({ userId: user._id, total: total, firstName: user.firstName, lastName: user.lastName, profilePicture: user.profilePicture });
-        }
-        leaderBoard.sort((a, b) => b.total - a.total);
-        leaderBoard = leaderBoard.slice(0, 10);
+        //     const events = await Event.find({ publisherId: user._id });
+        //     const posts = await Post.find({ publisherId: user._id });
+        //     let total = events.length * 10 + posts.length * 5;
+        //     if (user._id == id) {
+        //         myMarks = total;
+        //         fName = user.firstName + " " + user.lastName;
+        //     }
+        //     // leaderBoard.push({user:user,total:total});
+        //     leaderBoard.push({ userId: user._id, total: total, firstName: user.firstName, lastName: user.lastName, profilePicture: user.profilePicture });
+        // }
+        // leaderBoard.sort((a, b) => b.total - a.total);
+        // leaderBoard = leaderBoard.slice(0, 10);
+        // console.log(leaderBoard);
+
+
+        const leaderBoardUsers = await User.find({}).sort({ createdAt: -1 },{ marks: -1 }).limit(10);
+
+        const leaderBoard = leaderBoardUsers.map(user => ({
+            userId: user._id,
+            total: user.marks,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            profilePicture: user.profilePicture
+        }));
+
         console.log(leaderBoard);
+
+
         res.status(200).json({
             success: true,
             message: "LeaderBoard fetched successfully",
@@ -1050,6 +1086,18 @@ const deletePost = asyncHandler(async (req, res) => {
     console.log(id);
     try {
         // Find the event by ID and delete it
+        const post = await Post.findById(id);
+        const userId = post.publisherId;
+        const user = await User.findById(userId);
+        let markToUpdate = user.marks;
+        markToUpdate -= 5;
+        user.marks = markToUpdate;
+        await user.save();
+
+        await Event.findByIdAndUpdate(eventId, {
+            $pull: { post: post._id }
+        });
+
         await Post.findByIdAndDelete(id);
 
         res.status(200).json({
@@ -1132,7 +1180,7 @@ const goinglistController = asyncHandler(async (req, res) => {
         }
 
         // Sort the array in alphabetical order based on the username
-      //  goingListData.sort((a, b) => a.username.localeCompare(b.username));
+        //  goingListData.sort((a, b) => a.username.localeCompare(b.username));
 
         console.log(goingListData);
         res.status(200).json({
