@@ -81,7 +81,7 @@ const addMoment = asyncHandler(async (req, res) => {
         if (user) {
             // To increase the marks of publisher,
             let markToUpdate = user.marks;
-            markToUpdate += 10;
+            markToUpdate += 100;
             user.marks = markToUpdate;
             user.addedMoments.push(newEvent._id); // Assuming newEvent._id is the ObjectId of the newly created event
             await user.save();
@@ -571,7 +571,7 @@ const deleteEvent = asyncHandler(async (req, res) => {
         const user = await User.findById(userId);
         user.addedMoments = user.addedMoments.filter(momentId => momentId.toString() !== id.toString());
         let markToUpdate = user.marks;
-        markToUpdate -= 10;
+        markToUpdate -= 100;
         user.marks = markToUpdate;
         await user.save();
 
@@ -797,6 +797,9 @@ const contribute = asyncHandler(async (req, res) => {
 });
 
 const selectLeaderBoard = asyncHandler(async (req, res) => {
+    let myMarks;
+    let fullName;
+
     const { id } = req.params;
     console.log(id);
     try {
@@ -823,8 +826,8 @@ const selectLeaderBoard = asyncHandler(async (req, res) => {
         // console.log(leaderBoard);
 
 
-        const leaderBoardUsers = await User.find({}).sort({ createdAt: -1 },{ marks: -1 }).limit(10);
-
+        const leaderBoardUsers = await User.find({}).sort({ marks: -1, createdAt: -1  }).limit(10);
+        
         const leaderBoard = leaderBoardUsers.map(user => ({
             userId: user._id,
             total: user.marks,
@@ -834,13 +837,25 @@ const selectLeaderBoard = asyncHandler(async (req, res) => {
         }));
 
         console.log(leaderBoard);
+        const userDetails = await User.findById(id);
+        console.log(userDetails);
 
+        if (userDetails) {
+            myMarks = userDetails.marks;
+            fullName = userDetails.firstName + " " + userDetails.lastName;
+            console.log(myMarks);
+            console.log(fullName);
+        }
+        else {
+            throw new Error("User not found")
+        }
 
         res.status(200).json({
             success: true,
             message: "LeaderBoard fetched successfully",
-            data: { leaderBoard: leaderBoard, myMarks: myMarks, myName: fName }
+            data: { leaderBoard: leaderBoard, myMarks: myMarks, myName: fullName }
         });
+        
     } catch (error) {
         res.status(500).json({
             success: false,
@@ -849,6 +864,7 @@ const selectLeaderBoard = asyncHandler(async (req, res) => {
         });
     }
 });
+
 //react to use to find event eventId and photos find by image id and update the reacted users array with user id
 const reactToPhoto = asyncHandler(async (req, res) => {
     const { eventId, imageId, userId } = req.body;
@@ -1094,7 +1110,7 @@ const deletePost = asyncHandler(async (req, res) => {
         user.marks = markToUpdate;
         await user.save();
 
-        await Event.findByIdAndUpdate(eventId, {
+        await Event.findByIdAndUpdate(post.eventId, {
             $pull: { post: post._id }
         });
 
