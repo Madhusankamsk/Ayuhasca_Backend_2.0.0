@@ -18,6 +18,10 @@ const userSchema = mongoose.Schema(
       required: true,
       unique: true,
     },
+    isgoogle:{
+      type: Boolean,
+      required: true
+    },
     bio:{
       type: String,
       default: "",

@@ -11,16 +11,23 @@ const authUser = asyncHandler(async (req, res) => {
 
   const user = await User.findOne({ email });
 
-  if (user && (await user.matchPassword(password))) {
-    res.json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      token: generateToken(res, user._id),
+  if(user.isgoogle){
+    res.status(500).json({
+      success: false,
+      message: 'This email is signed up with Google signin',
     });
-  } else {
-    res.status(401);
-    throw new Error('Invalid email or password');
+  }else{
+    if (user && (await user.matchPassword(password))) {
+      res.json({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        token: generateToken(res, user._id),
+      });
+    } else {
+      res.status(401);
+      throw new Error('Invalid email or password');
+    }
   }
 });
 
@@ -28,7 +35,7 @@ const authUser = asyncHandler(async (req, res) => {
 // @route   POST /api/users
 // @access  Public
 const registerUser = asyncHandler(async (req, res) => {
-  const { firstName, lastName, email, password, birthday, profilePicture } = req.body;
+  const { firstName, lastName, email, password, birthday, profilePicture,isgoogle } = req.body;
   console.log(req.body)
   // console.log(req.body);
   const userExists = await User.findOne({ email });
@@ -46,7 +53,8 @@ const registerUser = asyncHandler(async (req, res) => {
     email,
     password,
     birthday,
-    profilePicture
+    profilePicture,
+    isgoogle
   });
 
   if (user) {
@@ -249,7 +257,14 @@ const resetPassword = asyncHandler(async (req, res) => {
     
     // Check if the user exists
     if (user) {
-      // Set the new password and save the user
+      if(user.isgoogle){
+        res.status(500).json({
+          success: false,
+          message: "This email is signed up with Google signin",
+        });
+        console.log("Hello world")
+      }else{
+        // Set the new password and save the user
       user.password = newPassword;
       await user.save();
 
@@ -257,6 +272,7 @@ const resetPassword = asyncHandler(async (req, res) => {
         success: true,
         message: "Password Reset",
       });
+      }
     } else {
       res.status(404).json({
         success: false,
