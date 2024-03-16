@@ -204,14 +204,21 @@ const sendVerificationCode = asyncHandler(async (req, res) => {
     const user = await User.findOne({ email }); // Add await here
   //  console.log(user);
     if (user) {
-      const code = Math.floor(100000 + Math.random() * 900000);
-       mailer(email, code);
-      codes[email] = code;
-      res.status(200).json({
-        success: true,
-        message: "Code sent successfully",
-        code: code,
-      });
+      if(user.isgoogle){
+        res.status(200).json({
+          success: false,
+          message: "This email is signed up with Google signin",
+        });
+      }else{
+        const code = Math.floor(100000 + Math.random() * 900000);
+        mailer(email, code);
+       codes[email] = code;
+       res.status(200).json({
+         success: true,
+         message: "Code sent successfully",
+         code: code,
+       });
+      }
     } else {
       res.status(404).json({
         success: false,
@@ -248,6 +255,36 @@ const verifyCode = asyncHandler(async (req, res) => {
 });
 
 
+// const resetPassword = asyncHandler(async (req, res) => {
+//   const { email, newPassword } = req.body;
+//   console.log(email, newPassword);
+//   try {
+//     // Find the user by email
+//     const user = await User.findOne({ email: email });
+    
+//     // Check if the user exists
+//     if (user) {
+//         // Set the new password and save the user
+//       user.password = newPassword;
+//       await user.save();
+
+//       res.status(200).json({
+//         success: true,
+//         message: "Password Reset",
+//       });
+//       }
+//       res.status(404).json({
+//         success: false,
+//         message: "User not found",
+//       });
+//   } catch (error) {
+//     res.status(500).json({
+//       success: false,
+//       message: 'Password reset failed',
+//     });
+//   }
+// });
+
 const resetPassword = asyncHandler(async (req, res) => {
   const { email, newPassword } = req.body;
   console.log(email, newPassword);
@@ -257,14 +294,7 @@ const resetPassword = asyncHandler(async (req, res) => {
     
     // Check if the user exists
     if (user) {
-      if(user.isgoogle){
-        res.status(500).json({
-          success: false,
-          message: "This email is signed up with Google signin",
-        });
-        console.log("Hello world")
-      }else{
-        // Set the new password and save the user
+      // Set the new password and save the user
       user.password = newPassword;
       await user.save();
 
@@ -272,7 +302,6 @@ const resetPassword = asyncHandler(async (req, res) => {
         success: true,
         message: "Password Reset",
       });
-      }
     } else {
       res.status(404).json({
         success: false,
