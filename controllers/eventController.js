@@ -405,6 +405,8 @@ const getMoments = asyncHandler(async (req, res) => {
             query.category = id;
         }
 
+        events = await Event.find(query).exec();
+
         events = events.filter((event) => {
             if (event.date === userDate) {
                 event.isToday = true;
@@ -1018,7 +1020,12 @@ const searchEvents = asyncHandler(async (req, res) => {
     const { id } = req.params;
     console.log(id);
     try {
-        const events = await Event.find({ eventname: { $regex: id, $options: 'i' } })
+        const events = await Event.find({
+            $or: [
+                { eventname: { $regex: id, $options: 'i' } },
+                { features: { $elemMatch: { $regex: id, $options: 'i' } } }
+            ]
+        });
         res.status(200).json({
             success: true,
             message: "Event fetched successfully",
