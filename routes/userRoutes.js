@@ -9,6 +9,7 @@ import {
   resetPassword,
   verifyCode,
   updateUserProfileNotification,
+  checkGoogleAuth
 } from '../controllers/userController.js';
 import { protect } from '../middleware/authMiddleware.js';
 
@@ -23,6 +24,7 @@ router.get('/ownerprofile/:id',getUserProfile);
 router.post('/verify',verifyCode);
 router.post('/send',sendVerificationCode);
 router.post('/reset',resetPassword);
+router.post('/email/:email',checkGoogleAuth);
   // .get(protect, getUserProfile)
   // .put(protect, updateUserProfile);
 
