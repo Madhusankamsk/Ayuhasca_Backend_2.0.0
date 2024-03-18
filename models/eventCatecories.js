@@ -7,7 +7,7 @@ const eventCatecoriesSchema = mongoose.Schema(
             type: String,
             required: true,
         },
-        category_id: {
+        id: {
             type: Number,
             required: true,
         }
@@ -15,3 +15,4 @@ const eventCatecoriesSchema = mongoose.Schema(
     );
 
 const EventCatecories = mongoose.model("EventCatecories", eventCatecoriesSchema);
+export default EventCatecories;
