@@ -3,8 +3,12 @@ import mongoose from "mongoose";
 
 const eventCatecoriesSchema = mongoose.Schema(
     {
-        name: {
+        name: { 
             type: String,
+            required: true,
+        },
+        category_id: {
+            type: Number,
             required: true,
         }
     },
