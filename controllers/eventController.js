@@ -1021,10 +1021,13 @@ const searchEvents = asyncHandler(async (req, res) => {
     console.log(id);
     try {
         const events = await Event.find({
-            $or: [
-                { eventname: { $regex: id, $options: 'i' } },
-                { features: { $elemMatch: { $regex: id, $options: 'i' } } }
-            ]
+            
+                $or: [
+                  { eventname: { $regex: '(^|\\b)' + id , $options: 'i' } },
+                  { features: { $elemMatch: { $regex: '(^|\\b)' + id , $options: 'i' } } },
+                  { location: { $regex: '(^|\\b)' + id , $options: 'i' } }
+                ]
+              
         });
         res.status(200).json({
             success: true,
