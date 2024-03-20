@@ -70,7 +70,8 @@ const checkGoogleAuth = async (req, res) => {
   try {
       const { email } = req.body; // Extract email from the request body
       const user = await User.findOne({ email });
-      if (user && user.isGoogle) {
+      if (user.isgoogle) {
+        console.log("Hiiiiiiiiiiiiiiiiiiiiiiii")
           res.json({
               _id: user._id,
               token: generateToken(res, user._id)
@@ -253,25 +254,26 @@ const codes = {};
 
 const sendVerificationCode = asyncHandler(async (req, res) => {
   const { email } = req.body;
- // console.log(email);
+  console.log(email);
+  
   try {
     const user = await User.findOne({ email }); // Add await here
-  //  console.log(user);
+    // console.log(user);
     if (user) {
-      if(user.isgoogle){
-        res.status(200).json({
+      if (user.isgoogle) {
+        res.status(409).json({
           success: false,
           message: "This email is signed up with Google signin",
         });
-      }else{
+      } else {
         const code = Math.floor(100000 + Math.random() * 900000);
-        mailer(email, code);
-       codes[email] = code;
-       res.status(200).json({
-         success: true,
-         message: "Code sent successfully",
-         code: code,
-       });
+        await mailer(email, code); // await here to ensure the email is sent before proceeding
+        codes[email] = code;
+        res.status(200).json({
+          success: true,
+          message: "Code sent successfully",
+          code: code,
+        });
       }
     } else {
       res.status(404).json({
@@ -283,10 +285,41 @@ const sendVerificationCode = asyncHandler(async (req, res) => {
     console.error('Error:', error);
     res.status(500).json({
       success: false,
-      message: "Entered email is not registered",
+      message: "An error occurred while sending the verification code",
     });
   }
 });
+
+
+// const sendVerificationCode = asyncHandler(async (req, res) => {
+//   const { email } = req.body;
+//  // console.log(email);
+//   try {
+//     const user = await User.findOne({ email }); // Add await here
+//   //  console.log(user);
+//     if (user) {
+//       const code = Math.floor(100000 + Math.random() * 900000);
+//        mailer(email, code);
+//       codes[email] = code;
+//       res.status(200).json({
+//         success: true,
+//         message: "Code sent successfully",
+//         code: code,
+//       });
+//     } else {
+//       res.status(404).json({
+//         success: false,
+//         message: "User not found",
+//       });
+//     }
+//   } catch (error) {
+//     console.error('Error:', error);
+//     res.status(500).json({
+//       success: false,
+//       message: "Entered email is not registered",
+//     });
+//   }
+// });
 
 const verifyCode = asyncHandler(async (req, res) => {
   const { email, code } = req.body;
