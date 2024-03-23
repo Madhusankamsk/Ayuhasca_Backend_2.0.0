@@ -87,9 +87,44 @@ const getCategoryController = async (req, res) => {
     }
 };
 
+const getCategoryNameByIdController = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const categoryId = parseInt(id, 10);
+        const category = await EventCatecories.findOne({ id });
+        const categoryName = category.name
+        console.log("category id: " + categoryId);
+        console.log("category: " + category);
+        console.log("category name: " + categoryName);
+
+        if (!category) {
+            return res.status(404).json({
+                success: false,
+                message: 'Category not found',
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'Categories Name fetched successfully',
+            data: categoryName,
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Categories Name fetching failed',
+            error: error.message,
+        });
+    }
+};
+
+
+
+
 export {
     createCategoryController,
     updateCategoryController,
     deleteCategoryController,
-    getCategoryController
+    getCategoryController,
+    getCategoryNameByIdController
 };
