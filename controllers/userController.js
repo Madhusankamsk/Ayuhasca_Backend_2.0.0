@@ -66,23 +66,49 @@ const authUser = asyncHandler(async (req, res) => {
 // };
 
 
+// const checkGoogleAuth = async (req, res) => {
+//   try {
+//       const { email } = req.body; // Extract email from the request body
+//       const user = await User.findOne({ email });
+//       if (user.isgoogle) {
+//         console.log("Hiiiiiiiiiiiiiiiiiiiiiiii")
+//           res.json({
+//               _id: user._id,
+//               token: generateToken(res, user._id)
+//           });
+//       } else {
+//           res.status(404).json({ error: 'User not found or not authenticated with Google' });
+//       }
+//   } catch (error) {
+//       res.status(500).json({ error: 'Internal server error' });
+//   }
+// };
+
+
 const checkGoogleAuth = async (req, res) => {
   try {
       const { email } = req.body; // Extract email from the request body
       const user = await User.findOne({ email });
-      if (user.isgoogle) {
-        console.log("Hiiiiiiiiiiiiiiiiiiiiiiii")
+
+      // Check if user exists
+      if (!user) {
+          res.status(404).json({ error: 'User not found or not authenticated with Google' });
+      } else if (user.isgoogle) {
+          // If user is authenticated with Google
+          console.log("Hiiiiiiiiiiiiiiiiiiiiiiii")
           res.json({
               _id: user._id,
-              token: generateToken(res, user._id)
+              token: generateToken(user._id) // Assuming generateToken only needs user's ID
           });
       } else {
-          res.status(404).json({ error: 'User not found or not authenticated with Google' });
+          // If user exists but is not authenticated with Google
+          res.status(400).json({ error: 'This email is not signed up with Google. Please use another method.' });
       }
   } catch (error) {
       res.status(500).json({ error: 'Internal server error' });
   }
 };
+
 
 
 
