@@ -92,7 +92,10 @@ const checkGoogleAuth = async (req, res) => {
 
       // Check if user exists
       if (!user) {
-          res.status(404).json({ error: 'User not found or not authenticated with Google' });
+          res.status(404).json({
+            success : true,
+            message: 'User not found or not authenticated with Google'
+          });
       } else if (user.isgoogle) {
           // If user is authenticated with Google
           console.log("Hiiiiiiiiiiiiiiiiiiiiiiii")
@@ -102,7 +105,10 @@ const checkGoogleAuth = async (req, res) => {
           });
       } else {
           // If user exists but is not authenticated with Google
-          res.status(400).json({ error: 'This email is not signed up with Google. Please use another method.' });
+          res.status(400).json({
+            success : false,
+            message: 'This email is not signed up with Google. Please use another method.'
+          });
       }
   } catch (error) {
       res.status(500).json({ error: 'Internal server error' });
