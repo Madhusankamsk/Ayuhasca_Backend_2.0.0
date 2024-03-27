@@ -883,9 +883,9 @@ const selectLeaderBoard = asyncHandler(async (req, res) => {
         // leaderBoard = leaderBoard.slice(0, 10);
         // console.log(leaderBoard);
 
+        const idToRemove = '65c9c72fc3e2227fb0c27d0e';
+        const leaderBoardUsers = await User.find({_id: { $ne: idToRemove }}).sort({ marks: -1, createdAt: -1 }).limit(20);
 
-        const leaderBoardUsers = await User.find({}).sort({ marks: -1, createdAt: -1  }).limit(10);
-        
         const leaderBoard = leaderBoardUsers.map(user => ({
             userId: user._id,
             total: user.marks,
@@ -913,7 +913,7 @@ const selectLeaderBoard = asyncHandler(async (req, res) => {
             message: "LeaderBoard fetched successfully",
             data: { leaderBoard: leaderBoard, myMarks: myMarks, myName: fullName }
         });
-        
+
     } catch (error) {
         res.status(500).json({
             success: false,
@@ -1021,13 +1021,13 @@ const searchEvents = asyncHandler(async (req, res) => {
     console.log(id);
     try {
         const events = await Event.find({
-            
-                $or: [
-                  { eventname: { $regex: '(^|\\b)' + id , $options: 'i' } },
-                  { features: { $elemMatch: { $regex: '(^|\\b)' + id , $options: 'i' } } },
-                  { location: { $regex: '(^|\\b)' + id , $options: 'i' } }
-                ]
-              
+
+            $or: [
+                { eventname: { $regex: '(^|\\b)' + id, $options: 'i' } },
+                { features: { $elemMatch: { $regex: '(^|\\b)' + id, $options: 'i' } } },
+                { location: { $regex: '(^|\\b)' + id, $options: 'i' } }
+            ]
+
         });
         res.status(200).json({
             success: true,
