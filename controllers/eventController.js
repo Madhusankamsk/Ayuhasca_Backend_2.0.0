@@ -104,284 +104,9 @@ const addMoment = asyncHandler(async (req, res) => {
         });
     }
 });
-// const getMoments = asyncHandler(async (req, res) => {
-//     const { id } = req.params;
-//     const { latitude,longitude,longitudeDelta,latitudeDelta } = req.body;
-//     console.log(latitude,longitude,longitudeDelta,latitudeDelta);
-
-//     try {
-//         let events;
-
-//         if (id) {
-//             if (id == 0) {
-//                 events = await Event.find({});
-//             } else {
-//                 events = await Event.find({ category: id });
-//             }
-//         } else {
-//             events = await Event.find({});
-//         }
-
-//         res.status(200).json({
-//             success: true,
-//             message: "Events fetched successfully",
-//             data: events
-//         });
-//     } catch (error) {
-//         res.status(500).json({
-//             success: false,
-//             message: "Events fetching failed",
-//             error: error.message
-//         });
-//     }
-// });
-
-// const getMoments = asyncHandler(async (req, res) => {
-//     const { id } = req.params;
-//     const { latitude, longitude, longitudeDelta, latitudeDelta,selectedDate,justNow } = req.body;
-//     console.log("mmmmmmmmmmmmmmmmm",req.body)
-//     try {
-//         let events;
-
-//         const minLatitude = latitude - latitudeDelta;
-//         const maxLatitude = latitude + latitudeDelta;
-//         const minLongitude = longitude - longitudeDelta;
-//         const maxLongitude = longitude + longitudeDelta;
-
-//         if (id) {
-//             if (id === '0') {
-//                 events = await Event.find({
-//                     //when selected date is not null
-//                     date: selectedDate ? selectedDate : { $gte: new Date().toISOString().slice(0, 10) },
-//                     latitude: { $gte: minLatitude, $lte: maxLatitude },
-//                     longitude: { $gte: minLongitude, $lte: maxLongitude },
-//                 });
-//                // console.log(events);
-//             } else {
-//                 events = await Event.find({
-//                     category: id,
-//                     //when selected date is not null
-//                     date: selectedDate ? selectedDate : { $gte: new Date().toISOString().slice(0, 10) },
-//                     latitude: { $gte: minLatitude, $lte: maxLatitude },
-//                     longitude: { $gte: minLongitude, $lte: maxLongitude },
-//                 });
-//               //  console.log(events);
-//             }
-//         } else {
-//             events = await Event.find({
-//                 //when selected date is not null
-//                 date: selectedDate ? selectedDate : { $gte: new Date().toISOString().slice(0, 10) },
-//                 latitude: { $gte: minLatitude, $lte: maxLatitude },
-//                 longitude: { $gte: minLongitude, $lte: maxLongitude },
-//             });
-//            // console.log(events);
-//         }
 
 
 
-//         for(let i=0;i<events.length;i++){
-//             let event = events[i];
-//             if(event.date == colomboTime.slice(0, 10)){
-//                 event.isToday = true;
-//                 console.log("D",event.eventname);
-//                 if(event.time <= colomboTime.slice(11, 16) && event.endTime >= colomboTime.slice(11, 16)){
-//                     event.isLive = true;
-//                     console.log("T",event.eventname);
-//                 }else{
-//                     if(event.endTime < colomboTime.slice(11, 16)){
-//                         //this event remove from the list
-//                         console.log("F",event.eventname);
-//                         events.splice(i,1);
-//                     }
-//                 }
-//             }
-//         }
-
-//      //   console.log(events);
-
-//         res.status(200).json({
-//             success: true,
-//             message: "Events fetched successfully",
-//             data: events
-//         });
-
-
-//     } catch (error) {
-//         res.status(500).json({
-//             success: false,
-//             message: 'Events fetching failed',
-//             error: error.message,
-//         });
-//     }
-// });
-
-
-
-// const getMoments = asyncHandler(async (req, res) => {
-//     const { id } = req.params;
-//     const { latitude, longitude, longitudeDelta, latitudeDelta,selectedDate,justNow } = req.body;
-//     console.log("mmmmmmmmmmmmmmmmm",req.body)
-//     try {
-//         let events;
-
-//         const minLatitude = latitude - latitudeDelta;
-//         const maxLatitude = latitude + latitudeDelta;
-//         const minLongitude = longitude - longitudeDelta;
-//         const maxLongitude = longitude + longitudeDelta;
-
-//         if (id) {
-//             if (id === '0') {
-//                 events = await Event.find({
-//                     //when selected date is not null
-//                     date: selectedDate ? selectedDate : { $gte: new Date().toISOString().slice(0, 10) },
-//                     latitude: { $gte: minLatitude, $lte: maxLatitude },
-//                     longitude: { $gte: minLongitude, $lte: maxLongitude },
-//                 });
-//                // console.log(events);
-//             } else {
-//                 events = await Event.find({
-//                     category: id,
-//                     //when selected date is not null
-//                     date: selectedDate ? selectedDate : { $gte: new Date().toISOString().slice(0, 10) },
-//                     latitude: { $gte: minLatitude, $lte: maxLatitude },
-//                     longitude: { $gte: minLongitude, $lte: maxLongitude },
-//                 });
-//               //  console.log(events);
-//             }
-//         } else {
-//             events = await Event.find({
-//                 //when selected date is not null
-//                 date: selectedDate ? selectedDate : { $gte: new Date().toISOString().slice(0, 10) },
-//                 latitude: { $gte: minLatitude, $lte: maxLatitude },
-//                 longitude: { $gte: minLongitude, $lte: maxLongitude },
-//             });
-//            // console.log(events);
-//         }
-
-
-
-//         for(let i=0;i<events.length;i++){
-//             let event = events[i];
-//             if(event.date == colomboTime.slice(0, 10)){
-//                 event.isToday = true;
-//                 console.log("D",event.eventname);
-//                 if(event.time <= colomboTime.slice(11, 16) && event.endTime >= colomboTime.slice(11, 16)){
-//                     event.isLive = true;
-//                     console.log("T",event.eventname);
-//                 }else{
-//                     if(event.endTime < colomboTime.slice(11, 16)){
-//                         //this event remove from the list
-//                         console.log("F",event.eventname);
-//                         events.splice(i,1);
-//                     }
-//                 }
-//             }
-//         }
-
-//      //   console.log(events);
-
-//         res.status(200).json({
-//             success: true,
-//             message: "Events fetched successfully",
-//             data: events
-//         });
-
-
-//     } catch (error) {
-//         res.status(500).json({
-//             success: false,
-//             message: 'Events fetching failed',
-//             error: error.message,
-//         });
-//     }
-// });
-
-// const getMoments = asyncHandler(async (req, res) => {
-//     const { id } = req.params;
-//     const { latitude, longitude, longitudeDelta, latitudeDelta, selectedDate, justNow, usertime,userDate } = req.body;
-//      console.log("mmmmmmmmmmmmmmmmm", req.body)
-
-//     try {
-//         let events;
-
-//         const minLatitude = latitude - latitudeDelta;
-//         const maxLatitude = latitude + latitudeDelta;
-//         const minLongitude = longitude - longitudeDelta;
-//         const maxLongitude = longitude + longitudeDelta;
-
-//         if (id) {
-//             if (id === '0') {
-//                 events = await Event.find({
-//                     date: selectedDate ? selectedDate : { $gte: new Date().toISOString().slice(0, 10) },
-//                     latitude: { $gte: minLatitude, $lte: maxLatitude },
-//                     longitude: { $gte: minLongitude, $lte: maxLongitude },
-//                 }).exec();
-//             } else {
-//                 events = await Event.find({
-//                     category: id,
-//                     date: selectedDate ? selectedDate : { $gte: new Date().toISOString().slice(0, 10) },
-//                     latitude: { $gte: minLatitude, $lte: maxLatitude },
-//                     longitude: { $gte: minLongitude, $lte: maxLongitude },
-//                 }).exec();
-//             }
-//         } else {
-//             events = await Event.find({
-//                 date: selectedDate ? selectedDate : { $gte: new Date().toISOString().slice(0, 10) },
-//                 latitude: { $gte: minLatitude, $lte: maxLatitude },
-//                 longitude: { $gte: minLongitude, $lte: maxLongitude },
-//             }).exec();
-//         }
-
-
-//        // console.log(events);
-
-//         events = events.filter((event) => {
-//             if (event.date === userDate) {
-//                 event.isToday = true;
-//                 if (event.time <= usertime && event.endTime >= usertime) {
-//                     event.isLive = true;
-//                 } else {
-//                     if (event.endTime < usertime) {
-//                         return false; // Remove this event from the list
-//                     }
-//                 }
-//             }
-//             return true; // Keep the event in the list
-//         });
-//         // events = events.filter((event) => {
-//         //     if (event.date === colomboTime.slice(0, 10)) {
-//         //         event.isToday = true;
-//         //         if (event.time <= colomboTime.slice(11, 16) && event.endTime >= colomboTime.slice(11, 16)) {
-//         //             event.isLive = true;
-//         //         } else {
-//         //             if (event.endTime < colomboTime.slice(11, 16)) {
-//         //                 return false; // Remove this event from the list
-//         //             }
-//         //         }
-//         //     }
-//         //     return true; // Keep the event in the list
-//         // });
-
-//         // If justNow is true, filter only events where isToday is true and isLive is true
-//         if (justNow) {
-//             events = events.filter((event) => event.isToday && event.isLive);
-//         }
-
-//         console.log(events);
-
-//         res.status(200).json({
-//             success: true,
-//             message: "Events fetched successfully",
-//             data: events,
-//         });
-//     } catch (error) {
-//         res.status(500).json({
-//             success: false,
-//             message: 'Events fetching failed',
-//             error: error.message,
-//         });
-//     }
-// });
 const getMoments = asyncHandler(async (req, res) => {
     const { id } = req.params;
     const { latitude, longitude, longitudeDelta, latitudeDelta, selectedDate, justNow, usertime, userDate } = req.body;
@@ -425,8 +150,14 @@ const getMoments = asyncHandler(async (req, res) => {
             events = events.filter((event) => event.isToday && event.isLive);
         }
 
-        console.log(events);
+        // Calculate distance for each event and sort based on distance
+        events.forEach(event => {
+            event.distance = calculateDistance(latitude, longitude, event.latitude, event.longitude);
+        });
 
+        // Sort events by distance
+        events.sort((a, b) => a.distance - b.distance);
+        //zoom in to get more events
         res.status(200).json({
             success: true,
             message: "Events fetched successfully",
@@ -440,6 +171,152 @@ const getMoments = asyncHandler(async (req, res) => {
         });
     }
 });
+
+// Function to calculate distance between two points using Haversine formula
+function calculateDistance(lat1, lon1, lat2, lon2) {
+    const R = 6371; // Radius of the Earth in kilometers
+    const dLat = deg2rad(lat2 - lat1);
+    const dLon = deg2rad(lon2 - lon1);
+    const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const d = R * c; // Distance in kilometers
+    return d;
+}
+
+function deg2rad(deg) {
+    return deg * (Math.PI / 180);
+}
+
+
+
+
+// const getMoments = asyncHandler(async (req, res) => {
+//     const { id } = req.params;
+//     const { latitude, longitude, longitudeDelta, latitudeDelta, selectedDate, justNow, usertime, userDate } = req.body;
+//     console.log("request body: ", req.body)
+
+//     try {
+//         let events;
+
+//         const minLatitude = latitude - latitudeDelta;
+//         const maxLatitude = latitude + latitudeDelta;
+//         const minLongitude = longitude - longitudeDelta;
+//         const maxLongitude = longitude + longitudeDelta;
+
+//         const query = {
+//             date: selectedDate ? selectedDate : { $gte: new Date().toISOString().slice(0, 10) },
+//             latitude: { $gte: minLatitude, $lte: maxLatitude },
+//             longitude: { $gte: minLongitude, $lte: maxLongitude },
+//         };
+
+//         if (id && id !== '0') {
+//             query.category = id;
+//         }
+
+//         events = await Event.find(query).exec();
+
+//         events = events.filter((event) => {
+//             if (event.date === userDate) {
+//                 event.isToday = true;
+//                 if (event.time <= usertime && event.endTime >= usertime) {
+//                     event.isLive = true;
+//                 } else {
+//                     if (event.endTime < usertime) {
+//                         return false; // Remove this event from the list
+//                     }
+//                 }
+//             }
+//             return true; // Keep the event in the list
+//         });
+
+//         if (justNow) {
+//             events = events.filter((event) => event.isToday && event.isLive);
+//         }
+
+//      //   console.log(events);
+
+//         res.status(200).json({
+//             success: true,
+//             message: "Events fetched successfully",
+//             data: events,
+//         });
+//     } catch (error) {
+//         res.status(500).json({
+//             success: false,
+//             message: 'Events fetching failed',
+//             error: error.message,
+//         });
+//     }
+// });
+
+
+
+
+
+// const getMoments = asyncHandler(async (req, res) => {
+//     const { id } = req.params;
+//     const { latitude, longitude, selectedDate, justNow, usertime, userDate } = req.body;
+//     console.log("request body: ", req.body);
+
+//     try {
+//         let events;
+
+//         const today = new Date().toISOString().slice(0, 10);
+//         const dateQuery = selectedDate ? selectedDate : { $gte: today };
+
+//         // Prepare the initial match stage, filtering by date and optionally by category
+//         let matchStage = {
+//             date: dateQuery,
+//         };
+
+//         if (id && id !== '0') {
+//             matchStage.category = id;
+//         }
+
+//         // Use aggregation framework to first match the documents, then sort by distance
+//         events = await Event.aggregate([
+//             {
+//                 $geoNear: {
+//                     near: { type: "Point", coordinates: [parseFloat(longitude), parseFloat(latitude)] },
+//                     distanceField: "distance", // This field will be added to output documents.
+//                     spherical: true,
+//                 }
+//             },
+//             {
+//                 $match: matchStage,
+//             },
+//             // You can add other stages as needed, e.g., to filter or project fields
+//         ]).exec();
+
+//         // Your existing filter logic here...
+//         events = events.filter(event => {
+//             // Assuming you adjust for including the distance check or adjustment as needed here.
+//             return true; // Placeholder for actual logic
+//         });
+
+//         // Your existing logic for filtering by userDate and usertime can remain here.
+
+//         res.status(200).json({
+//             success: true,
+//             message: "Events fetched successfully",
+//             data: events,
+//         });
+//     } catch (error) {
+//         res.status(500).json({
+//             success: false,
+//             message: 'Events fetching failed',
+//             error: error.message,
+//         });
+//     }
+// });
+
+
+
+
+
 
 const getEachMoment = asyncHandler(async (req, res) => {
     // console.log("cgsffgffgf")
