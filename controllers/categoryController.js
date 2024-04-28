@@ -2,11 +2,12 @@ import EventCatecories from "../models/eventCatecories.js";
 
 const createCategoryController = async (req, res) => {
     try {
-        const { name, id } = req.body;
+        const { name, id, marker_image } = req.body;
 
         const newCategory = new EventCatecories({
             name,
             id,
+            marker_image,
         });
 
         const savedCategory = await newCategory.save();
@@ -28,11 +29,11 @@ const createCategoryController = async (req, res) => {
 const updateCategoryController = async (req, res) => {
     try {
         const { _id } = req.body;
-        const { name, id } = req.body;
+        const { name, id , marker_image } = req.body;
 
         const updatedCategory = await EventCatecories.findByIdAndUpdate(
             _id,
-            { name, id },
+            { name, id , marker_image},
             { new: true }
         );
 
