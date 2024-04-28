@@ -10,6 +10,7 @@ const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
   const user = await User.findOne({ email });
+  console.log("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",generateToken(res,user._id))
 
   if(user.isgoogle){
     res.status(500).json({
@@ -31,60 +32,6 @@ const authUser = asyncHandler(async (req, res) => {
   }
 });
 
-
-// const checkGoogleAuth = asyncHandler(async(res,res)=>{
-//   try {
-//     const { email } = req.params;
-//     const user = await User.findOne({ email });
-//     if(user.isgoogle){
-//       res.json({
-//         _id : user._id,
-//         token: generateToken(res, user._id)
-//       })
-//     }
-//   } catch (error) {
-//     res.status(404);
-//     throw new Error('User not found'); 
-//   }
-// })
-
-// const checkGoogleAuth = async (req, res) => { // Corrected parameters in async function
-//   try {
-//       const { email } = req.params;
-//       const user = await User.findOne({ email });
-//       if (user && user.isGoogle) { // Corrected property name to isGoogle assuming it indicates if the user has signed in with Google
-//           res.json({
-//               _id: user._id,
-//               token: generateToken(res, user._id)
-//           });
-//       } else {
-//           res.status(404).json({ error: 'User not found or not authenticated with Google' }); // Send proper response when user is not found or not authenticated with Google
-//       }
-//   } catch (error) {
-//       res.status(500).json({ error: 'Internal server error' }); // Send proper response in case of any error
-//   }
-// };
-
-
-// const checkGoogleAuth = async (req, res) => {
-//   try {
-//       const { email } = req.body; // Extract email from the request body
-//       const user = await User.findOne({ email });
-//       if (user.isgoogle) {
-//         console.log("Hiiiiiiiiiiiiiiiiiiiiiiii")
-//           res.json({
-//               _id: user._id,
-//               token: generateToken(res, user._id)
-//           });
-//       } else {
-//           res.status(404).json({ error: 'User not found or not authenticated with Google' });
-//       }
-//   } catch (error) {
-//       res.status(500).json({ error: 'Internal server error' });
-//   }
-// };
-
-
 const checkGoogleAuth = async (req, res) => {
   try {
       const { email } = req.body; // Extract email from the request body
@@ -98,10 +45,11 @@ const checkGoogleAuth = async (req, res) => {
           });
       } else if (user.isgoogle) {
           // If user is authenticated with Google
-          console.log("Hiiiiiiiiiiiiiiiiiiiiiiii")
+          console.log("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",generateToken(res,user._id))
+
           res.json({
               _id: user._id,
-              token: generateToken(user._id) // Assuming generateToken only needs user's ID
+              token: generateToken(res,user._id) // Assuming generateToken only needs user's ID
           });
       } else {
           // If user exists but is not authenticated with Google

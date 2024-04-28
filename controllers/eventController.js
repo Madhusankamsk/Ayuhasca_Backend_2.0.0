@@ -43,7 +43,11 @@ const addMoment = asyncHandler(async (req, res) => {
     console.log(req.body);
 
     const token = req.header('Authorization').replace('Bearer ', '');
-    // console.log(token);
+     console.log(token);
+     //eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NWY5ZTUwYWQ5NzJiZjEzMWQ3ODBiZmQiLCJpYXQiOjE3MTQyNDEwMzgsImV4cCI6MTcyNzIwMTAzOH0.UAJifAhzB1Oq28cQSx9NV-AsgMI_E5FVapdhbqxXcK8
+     //eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MTQyMzk5ODEsImV4cCI6MTcyNzE5OTk4MX0.JriVWNWQUp5tfELqzpKF0J1zm69wQYQWnTR6GOvNgKc
+     //eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjI1NTE1YTI3ZjMwMjE0MjA0NzVjOTYiLCJpYXQiOjE3MTQyNDA3OTYsImV4cCI6MTcyNzIwMDc5Nn0.LKoz1Kmmr25CYDa0VasA8j3ER2dmXT0Kqy-RXymaBWI
+     //eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjI1NTE1YTI3ZjMwMjE0MjA0NzVjOTYiLCJpYXQiOjE3MTQyNDEzNzcsImV4cCI6MTcyNzIwMTM3N30.X5TST6oI4sB7FtYx0cPF_wrJn4jzQAD3Ft9m7xtZgMA
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         //  const newGallery = gallery.map(item => ({ photoUrl: item })); // Create gallery objects
@@ -104,7 +108,6 @@ const addMoment = asyncHandler(async (req, res) => {
         });
     }
 });
-
 
 
 const getMoments = asyncHandler(async (req, res) => {
