@@ -10,6 +10,9 @@ const eventCatecoriesSchema = mongoose.Schema(
         id: {
             type: Number,
             required: true,
+        },
+        marker_image: {
+            type: String,
         }
     },
     );
