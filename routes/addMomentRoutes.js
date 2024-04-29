@@ -1,11 +1,12 @@
 import express from "express";
-import { addMoment, getMoments,getEachMoment,goinglistController,feedbackController,editPostOfUser,deletePost,getPost,likeUpdate,disLikeUpdate,getMyMoments,deleteEvent,createPost,getPostFeed,getUserDetails,getWholePosts,interestedUpdate,goingUpdate,contribute,selectLeaderBoard,reactToPhoto,updateEvents,searchEvents,sendNotification} from "../controllers/eventController.js"; // Adjust the path
+import { addMoment, getMoments,getTiles,getEachMoment,goinglistController,feedbackController,editPostOfUser,deletePost,getPost,likeUpdate,disLikeUpdate,getMyMoments,deleteEvent,createPost,getPostFeed,getUserDetails,getWholePosts,interestedUpdate,goingUpdate,contribute,selectLeaderBoard,reactToPhoto,updateEvents,searchEvents,sendNotification} from "../controllers/eventController.js"; // Adjust the path
 
 const router = express.Router();
 
 // Define routes here
 router.post("/add", addMoment);
 router.post("/get/:id", getMoments);
+router.post("/gettiles/:id", getTiles);
 router.post("/getdata", getEachMoment);
 router.get("/getposts/:id", getPost);
 router.post("/updatelike", likeUpdate);

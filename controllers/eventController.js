@@ -110,7 +110,7 @@ const addMoment = asyncHandler(async (req, res) => {
 });
 
 
-const getMoments = asyncHandler(async (req, res) => {
+const getTiles = asyncHandler(async (req, res) => {
     const { id } = req.params;
     const { latitude, longitude, longitudeDelta, latitudeDelta, selectedDate, justNow, usertime, userDate } = req.body;
     console.log("request body: ", req.body)
@@ -196,126 +196,64 @@ function deg2rad(deg) {
 
 
 
-// const getMoments = asyncHandler(async (req, res) => {
-//     const { id } = req.params;
-//     const { latitude, longitude, longitudeDelta, latitudeDelta, selectedDate, justNow, usertime, userDate } = req.body;
-//     console.log("request body: ", req.body)
+const getMoments = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const { latitude, longitude, longitudeDelta, latitudeDelta, selectedDate, justNow, usertime, userDate } = req.body;
+    console.log("request body: ", req.body)
 
-//     try {
-//         let events;
+    try {
+        let events;
 
-//         const minLatitude = latitude - latitudeDelta;
-//         const maxLatitude = latitude + latitudeDelta;
-//         const minLongitude = longitude - longitudeDelta;
-//         const maxLongitude = longitude + longitudeDelta;
+        const minLatitude = latitude - latitudeDelta;
+        const maxLatitude = latitude + latitudeDelta;
+        const minLongitude = longitude - longitudeDelta;
+        const maxLongitude = longitude + longitudeDelta;
 
-//         const query = {
-//             date: selectedDate ? selectedDate : { $gte: new Date().toISOString().slice(0, 10) },
-//             latitude: { $gte: minLatitude, $lte: maxLatitude },
-//             longitude: { $gte: minLongitude, $lte: maxLongitude },
-//         };
+        const query = {
+            date: selectedDate ? selectedDate : { $gte: new Date().toISOString().slice(0, 10) },
+            latitude: { $gte: minLatitude, $lte: maxLatitude },
+            longitude: { $gte: minLongitude, $lte: maxLongitude },
+        };
 
-//         if (id && id !== '0') {
-//             query.category = id;
-//         }
+        if (id && id !== '0') {
+            query.category = id;
+        }
 
-//         events = await Event.find(query).exec();
+        events = await Event.find(query).exec();
 
-//         events = events.filter((event) => {
-//             if (event.date === userDate) {
-//                 event.isToday = true;
-//                 if (event.time <= usertime && event.endTime >= usertime) {
-//                     event.isLive = true;
-//                 } else {
-//                     if (event.endTime < usertime) {
-//                         return false; // Remove this event from the list
-//                     }
-//                 }
-//             }
-//             return true; // Keep the event in the list
-//         });
+        events = events.filter((event) => {
+            if (event.date === userDate) {
+                event.isToday = true;
+                if (event.time <= usertime && event.endTime >= usertime) {
+                    event.isLive = true;
+                } else {
+                    if (event.endTime < usertime) {
+                        return false; // Remove this event from the list
+                    }
+                }
+            }
+            return true; // Keep the event in the list
+        });
 
-//         if (justNow) {
-//             events = events.filter((event) => event.isToday && event.isLive);
-//         }
+        if (justNow) {
+            events = events.filter((event) => event.isToday && event.isLive);
+        }
 
-//      //   console.log(events);
+     //   console.log(events);
 
-//         res.status(200).json({
-//             success: true,
-//             message: "Events fetched successfully",
-//             data: events,
-//         });
-//     } catch (error) {
-//         res.status(500).json({
-//             success: false,
-//             message: 'Events fetching failed',
-//             error: error.message,
-//         });
-//     }
-// });
-
-
-
-
-
-// const getMoments = asyncHandler(async (req, res) => {
-//     const { id } = req.params;
-//     const { latitude, longitude, selectedDate, justNow, usertime, userDate } = req.body;
-//     console.log("request body: ", req.body);
-
-//     try {
-//         let events;
-
-//         const today = new Date().toISOString().slice(0, 10);
-//         const dateQuery = selectedDate ? selectedDate : { $gte: today };
-
-//         // Prepare the initial match stage, filtering by date and optionally by category
-//         let matchStage = {
-//             date: dateQuery,
-//         };
-
-//         if (id && id !== '0') {
-//             matchStage.category = id;
-//         }
-
-//         // Use aggregation framework to first match the documents, then sort by distance
-//         events = await Event.aggregate([
-//             {
-//                 $geoNear: {
-//                     near: { type: "Point", coordinates: [parseFloat(longitude), parseFloat(latitude)] },
-//                     distanceField: "distance", // This field will be added to output documents.
-//                     spherical: true,
-//                 }
-//             },
-//             {
-//                 $match: matchStage,
-//             },
-//             // You can add other stages as needed, e.g., to filter or project fields
-//         ]).exec();
-
-//         // Your existing filter logic here...
-//         events = events.filter(event => {
-//             // Assuming you adjust for including the distance check or adjustment as needed here.
-//             return true; // Placeholder for actual logic
-//         });
-
-//         // Your existing logic for filtering by userDate and usertime can remain here.
-
-//         res.status(200).json({
-//             success: true,
-//             message: "Events fetched successfully",
-//             data: events,
-//         });
-//     } catch (error) {
-//         res.status(500).json({
-//             success: false,
-//             message: 'Events fetching failed',
-//             error: error.message,
-//         });
-//     }
-// });
-
+        res.status(200).json({
+            success: true,
+            message: "Events fetched successfully",
+            data: events,
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Events fetching failed',
+            error: error.message,
+        });
+    }
+});
 
 
 
@@ -1164,4 +1102,4 @@ const goinglistController = asyncHandler(async (req, res) => {
 
 
 
-export { addMoment, getMoments, editPostOfUser, goinglistController, feedbackController, getEachMoment, getPost, likeUpdate, deletePost, disLikeUpdate, getMyMoments, deleteEvent, createPost, getPostFeed, getUserDetails, getWholePosts, interestedUpdate, goingUpdate, contribute, selectLeaderBoard, reactToPhoto, updateEvents, searchEvents, sendNotification };
+export { addMoment,getTiles, getMoments, editPostOfUser, goinglistController, feedbackController, getEachMoment, getPost, likeUpdate, deletePost, disLikeUpdate, getMyMoments, deleteEvent, createPost, getPostFeed, getUserDetails, getWholePosts, interestedUpdate, goingUpdate, contribute, selectLeaderBoard, reactToPhoto, updateEvents, searchEvents, sendNotification };
