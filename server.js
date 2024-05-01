@@ -8,6 +8,7 @@ import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 import userRoutes from './routes/userRoutes.js';
 import addMomentRoutes from './routes/addMomentRoutes.js';
 import categoryRoutes from './routes/categoryRoutes.js';
+import reportRoutes from './routes/reportRoutes.js';
 import { CronJob } from 'cron';
 import User from './models/userModel.js';
 import Event from './models/eventModel.js';
@@ -27,6 +28,7 @@ app.use(cookieParser());
 app.use('/api/users', userRoutes);
 app.use('/api/events', addMomentRoutes);
 app.use('/api/categories', categoryRoutes);
+app.use('/api/report', reportRoutes);
 
 new CronJob('0 8 * * *', async function () {
   console.log('You will see this message every minute');
