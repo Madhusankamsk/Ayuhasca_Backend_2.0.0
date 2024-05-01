@@ -8,7 +8,7 @@ import {
 } from "../controllers/reportController.js"; 
 const router = express.Router();
 
-router.post("/crateReport", createReportController);
+router.post("/createReport", createReportController);
 router.put("/updateReport", updateReportController);
 router.delete("/deleteReport/:id", deleteReportController);
 router.get("/getReport", getReportController);

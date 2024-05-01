@@ -2,22 +2,26 @@ import Report from "../models/reportModel.js";
 
 const createReportController = async (req, res) => {
     try {
-        const { report_user_id, 
-            report_event_id, 
+        const { report_user_id,
+            report_event_id,
             event_created_user_id,
             is_fake,
             report_message,
         } = req.body;
 
+        
+        console.log(req.body)
+
+
         const newReport = new Report({
-            report_user_id, 
+            report_user_id,
             report_event_id,
             event_created_user_id,
             is_fake,
             report_message,
         });
 
-        const savedReport = await newReport.save();
+        //    const savedReport = await newReport.save();
 
         res.status(201).json({
             success: true,
@@ -36,8 +40,8 @@ const createReportController = async (req, res) => {
 const updateReportController = async (req, res) => {
     try {
         const { _id } = req.body;
-        const { report_user_id, 
-            report_event_id, 
+        const { report_user_id,
+            report_event_id,
             event_created_user_id,
             is_fake,
             report_message,
@@ -45,11 +49,13 @@ const updateReportController = async (req, res) => {
 
         const updatedReport = await Report.findByIdAndUpdate(
             _id,
-            { report_user_id, 
-                report_event_id, 
+            {
+                report_user_id,
+                report_event_id,
                 event_created_user_id,
                 is_fake,
-                report_message,},
+                report_message,
+            },
             { new: true }
         );
 

@@ -265,6 +265,7 @@ const getEachMoment = asyncHandler(async (req, res) => {
     try {
         //whole events list fetch
         const event = await Event.findById(id)
+       // console.log(event)
         console.log(event);
         const user = await User.findById(userId);
         // console.log("Interested",event.interested.includes(userId));
