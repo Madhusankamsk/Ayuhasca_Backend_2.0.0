@@ -127,11 +127,11 @@ const eventSchema = mongoose.Schema(
             type: [String],
             default: [],
         },
-        // is_active: {
-        //     type: Boolean,
-        //     required: true,
-        //     default: true,
-        // },
+        isActive: {
+            type: Boolean,
+            required: true,
+            default: true,
+        },
         post: [{type: mongoose.Schema.Types.ObjectId,ref: 'Post'}]
     },
     {

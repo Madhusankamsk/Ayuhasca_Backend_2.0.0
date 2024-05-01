@@ -9,9 +9,7 @@ const createReportController = async (req, res) => {
             report_message,
         } = req.body;
 
-        
-        console.log(req.body)
-
+        console.log("report request body for create: "+ req.body)
 
         const newReport = new Report({
             report_user_id,
@@ -21,7 +19,7 @@ const createReportController = async (req, res) => {
             report_message,
         });
 
-            const savedReport = await newReport.save();
+        const savedReport = await newReport.save();
 
         res.status(201).json({
             success: true,
@@ -54,7 +52,8 @@ const updateReportController = async (req, res) => {
                 report_event_id,
                 event_created_user_id,
                 report_type,
-                report_message,},
+                report_message,
+            },
             { new: true }
         );
 

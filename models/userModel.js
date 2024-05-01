@@ -66,6 +66,11 @@ const userSchema = mongoose.Schema(
       type: Number,
       default: 0,
     },
+    isAddFakeEvent:{
+      type: Boolean,
+      required: true,
+      default: 0,
+    },
   },
   {
     timestamps: true,

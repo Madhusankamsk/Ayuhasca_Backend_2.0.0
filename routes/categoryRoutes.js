@@ -8,7 +8,7 @@ import {
 } from "../controllers/categoryController.js"; 
 const router = express.Router();
 
-router.post("/crateCategory", createCategoryController);
+router.post("/createCategory", createCategoryController);
 router.put("/updateCategory", updateCategoryController);
 router.delete("/deleteCategory/:id", deleteCategoryController);
 router.get("/getCategory", getCategoryController);

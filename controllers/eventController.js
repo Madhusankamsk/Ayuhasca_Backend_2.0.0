@@ -37,7 +37,7 @@ const addMoment = asyncHandler(async (req, res) => {
         entrancefee,
         features,
         ticketprice,
-        gallery
+        gallery,
     } = req.body;
 
     console.log(req.body);
@@ -78,7 +78,8 @@ const addMoment = asyncHandler(async (req, res) => {
             features,
             ticketprice,
             //   gallery: newGallery
-            gallery
+            gallery,
+            isActive: true
         });
         console.log(newEvent);
         const user = await User.findById(decoded.userId);
@@ -92,8 +93,6 @@ const addMoment = asyncHandler(async (req, res) => {
         } else {
             console.log("User not found");
         }
-
-
 
         res.status(201).json({
             success: true,
@@ -127,6 +126,7 @@ const getTiles = asyncHandler(async (req, res) => {
             date: selectedDate ? selectedDate : { $gte: new Date().toISOString().slice(0, 10) },
             latitude: { $gte: minLatitude, $lte: maxLatitude },
             longitude: { $gte: minLongitude, $lte: maxLongitude },
+            //isActive: true, // To Filter is Active true events
         };
 
         if (id && id !== '0') {
@@ -193,9 +193,6 @@ function deg2rad(deg) {
     return deg * (Math.PI / 180);
 }
 
-
-
-
 const getMoments = asyncHandler(async (req, res) => {
     const { id } = req.params;
     const { latitude, longitude, longitudeDelta, latitudeDelta, selectedDate, justNow, usertime, userDate } = req.body;
@@ -213,6 +210,7 @@ const getMoments = asyncHandler(async (req, res) => {
             date: selectedDate ? selectedDate : { $gte: new Date().toISOString().slice(0, 10) },
             latitude: { $gte: minLatitude, $lte: maxLatitude },
             longitude: { $gte: minLongitude, $lte: maxLongitude },
+            isActive: true, // To Filter is Active true events
         };
 
         if (id && id !== '0') {
@@ -255,16 +253,16 @@ const getMoments = asyncHandler(async (req, res) => {
     }
 });
 
-
-
-
-
 const getEachMoment = asyncHandler(async (req, res) => {
     // console.log("cgsffgffgf")
     const { id, userId } = req.body;
     try {
         //whole events list fetch
-        const event = await Event.findById(id)
+        //const event = await Event.findById(id)
+        const event = await Event.findById({
+            _id: id,
+            isActive: true, // Filter isActive true events
+        })
        // console.log(event)
         console.log(event);
         const user = await User.findById(userId);
@@ -291,6 +289,7 @@ const getEachMoment = asyncHandler(async (req, res) => {
         });
     }
 });
+
 const getPost = asyncHandler(async (req, res) => {
     const { id } = req.params;
     const page = parseInt(req.query.page) || 1;
@@ -306,6 +305,7 @@ const getPost = asyncHandler(async (req, res) => {
             //compare each events distance with user current location and return
             const events = await Event.find({
                 date: { $gte: new Date().toISOString().slice(0, 10) },
+                isActive: true, // To Filter is Active true events
             }).exec();
             for (let i = 0; i < events.length; i++) {
                 let event = events[i];
@@ -422,7 +422,10 @@ const getMyMoments = asyncHandler(async (req, res) => {
     const { id } = req.body;
     try {
         //whole events list fetch
-        const events = await Event.find({ publisherId: id }).sort({ createdAt: -1 });
+        const events = await Event.find({ 
+            publisherId: id ,
+            isActive: true, // To Filter is Active true events
+        }).sort({ createdAt: -1 });
         // console.log(events)
         res.status(200).json({
             success: true,
@@ -509,7 +512,11 @@ const createPost = asyncHandler(async (req, res) => {
 const getPostFeed = asyncHandler(async (req, res) => {
     const { id } = req.params;
     try {
-        const event = await Event.findById(id).populate('post').sort({ createdAt: -1 });
+        //const event = await Event.findById(id).populate('post').sort({ createdAt: -1 });
+        const event = await Event.findOne({
+            _id: id,
+            isActive: true, // Filter isActive true events
+        }).populate('post').sort({ createdAt: -1 });
         //  console.log(event.post);
         res.status(200).json({
             success: true,
@@ -550,11 +557,13 @@ const getWholePosts = asyncHandler(async (req, res) => {
     // console.log(id);
     try {
         const post = await Post.find({ publisherId: id }).sort({ createdAt: -1 });
+
         res.status(200).json({
             success: true,
             message: "Event fetched successfully",
             data: post
         })
+
     } catch (error) {
         res.status(500).json({
             success: false,
@@ -569,7 +578,11 @@ const interestedUpdate = asyncHandler(async (req, res) => {
 
     const { id, userId } = req.body;
     try {
-        const event = await Event.findById(id);
+        //const event = await Event.findById(id);
+        const event = await Event.findById({
+            _id: id,
+            isActive: true, // Filter isActive true events
+        });
         const user = await User.findById(userId);
         if (event && user) {
             if (event.interested.includes(userId) && user.interestedEvents.includes(id)) {
@@ -610,7 +623,11 @@ const goingUpdate = asyncHandler(async (req, res) => {
 
     const { id, userId } = req.body;
     try {
-        const event = await Event.findById(id);
+        //const event = await Event.findById(id);
+        const event = await Event.findById({
+            _id: id,
+            isActive: true, // Filter isActive true events
+        });
         const user = await User.findById(userId);
         if (event && user) {
             if (event.going.includes(userId) && user.goingEvents.includes(id)) {
@@ -747,7 +764,11 @@ const reactToPhoto = asyncHandler(async (req, res) => {
     const { eventId, imageId, userId } = req.body;
     console.log(eventId, imageId, userId);
     try {
-        const event = await Event.findById(eventId);
+        //const event = await Event.findById(eventId);
+        const event = await Event.findById({
+            _id: eventId,
+            isActive: true, // Filter isActive true events
+        });
         if (event) {
             const photo = event.gallery.id(imageId);
             if (photo) {
@@ -795,8 +816,11 @@ const updateEvents = asyncHandler(async (req, res) => {
 
     try {
         // First, check if the user (userId) has permission to update the event with the given id
-        const event = await Event.findById(id);
-
+        //const event = await Event.findById(id);
+        const event = await Event.findById({
+            _id: id,
+            isActive: true, // Filter isActive true events
+        });
         if (!event) {
             return res.status(404).json({
                 success: false,
@@ -839,14 +863,28 @@ const searchEvents = asyncHandler(async (req, res) => {
     const { id } = req.params;
     console.log(id);
     try {
+        // const events = await Event.find({
+
+        //     $or: [
+        //         { eventname: { $regex: '(^|\\b)' + id, $options: 'i' } },
+        //         { features: { $elemMatch: { $regex: '(^|\\b)' + id, $options: 'i' } } },
+        //         { location: { $regex: '(^|\\b)' + id, $options: 'i' } }
+        //     ]
+
+        // });
         const events = await Event.find({
-
-            $or: [
-                { eventname: { $regex: '(^|\\b)' + id, $options: 'i' } },
-                { features: { $elemMatch: { $regex: '(^|\\b)' + id, $options: 'i' } } },
-                { location: { $regex: '(^|\\b)' + id, $options: 'i' } }
+            $and: [
+                {
+                    isActive: true, // Filter isActive=true events
+                },
+                {
+                    $or: [
+                        { eventname: { $regex: '(^|\\b)' + id, $options: 'i' } },
+                        { features: { $elemMatch: { $regex: '(^|\\b)' + id, $options: 'i' } } },
+                        { location: { $regex: '(^|\\b)' + id, $options: 'i' } }
+                    ]
+                }
             ]
-
         });
         res.status(200).json({
             success: true,
@@ -861,7 +899,6 @@ const searchEvents = asyncHandler(async (req, res) => {
         });
     }
 })
-
 
 // const sendNotification = asyncHandler(async (req, res) => {
 //     const { message } = req.body;
