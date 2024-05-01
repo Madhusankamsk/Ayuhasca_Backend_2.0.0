@@ -21,7 +21,7 @@ const createReportController = async (req, res) => {
             report_message,
         });
 
-        //    const savedReport = await newReport.save();
+            const savedReport = await newReport.save();
 
         res.status(201).json({
             success: true,
