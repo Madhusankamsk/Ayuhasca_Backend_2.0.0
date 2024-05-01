@@ -53,7 +53,7 @@ const updateReportController = async (req, res) => {
                 report_user_id,
                 report_event_id,
                 event_created_user_id,
-                is_fake,
+                report_type,
                 report_message,},
             { new: true }
         );
