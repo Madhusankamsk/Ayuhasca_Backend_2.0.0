@@ -5,7 +5,7 @@ const createReportController = async (req, res) => {
         const { report_user_id, 
             report_event_id, 
             event_created_user_id,
-            is_fake,
+            report_type,
             report_message,
         } = req.body;
 
@@ -13,7 +13,7 @@ const createReportController = async (req, res) => {
             report_user_id, 
             report_event_id,
             event_created_user_id,
-            is_fake,
+            report_type,
             report_message,
         });
 
@@ -39,7 +39,7 @@ const updateReportController = async (req, res) => {
         const { report_user_id, 
             report_event_id, 
             event_created_user_id,
-            is_fake,
+            report_type,
             report_message,
         } = req.body;
 
@@ -48,7 +48,7 @@ const updateReportController = async (req, res) => {
             { report_user_id, 
                 report_event_id, 
                 event_created_user_id,
-                is_fake,
+                report_type,
                 report_message,},
             { new: true }
         );
@@ -134,9 +134,6 @@ const getReportByIdController = async (req, res) => {
         });
     }
 };
-
-
-
 
 export {
     createReportController,

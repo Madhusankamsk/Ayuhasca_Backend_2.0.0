@@ -17,8 +17,8 @@ const reportSchema = mongoose.Schema(
             ref: 'User',
             required: true,
         },
-        is_fake: {
-            type: Boolean,
+        report_type: {
+            type: String,
             required: true,
         },
         report_message: {
