@@ -1,5 +1,6 @@
 import Report from "../models/reportModel.js";
 import Event from "../models/eventModel.js";
+import User from "../models/userModel.js";
 
 const getReportController = async (req, res) => {
     try {
@@ -135,7 +136,61 @@ const getEventReportController = async (req, res) => {
     }
 };
 
+const blockEventController = async (req, res) => {
+    try {
+        const { _id, isActive } = req.body;
+
+        const toggleEventVisible = await Event.findByIdAndUpdate(
+            _id,
+            {
+                isActive,
+            },
+            { new: true }
+        );
+
+        res.status(200).json({
+            success: true,
+            message: 'Toggled Event successfully',
+            data: toggleEventVisible,
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Event update failed',
+            error: error.message,
+        });
+    }
+};
+
+const blockEventAddEvent = async (req, res) => {
+    try {
+        const { _id, isAddFakeEvent } = req.body;
+
+        const toggleAddEvent = await User.findByIdAndUpdate(
+            _id,
+            {
+                isAddFakeEvent,
+            },
+            { new: true }
+        );
+
+        res.status(200).json({
+            success: true,
+            message: 'Toggled Event successfully',
+            data: toggleAddEvent,
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Event update failed',
+            error: error.message,
+        });
+    }
+};
+
 export {
     getReportController,
     getEventReportController,
+    blockEventController,
+    blockEventAddEvent
 };

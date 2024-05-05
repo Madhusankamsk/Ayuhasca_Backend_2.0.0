@@ -126,7 +126,7 @@ const getTiles = asyncHandler(async (req, res) => {
             date: selectedDate ? selectedDate : { $gte: new Date().toISOString().slice(0, 10) },
             latitude: { $gte: minLatitude, $lte: maxLatitude },
             longitude: { $gte: minLongitude, $lte: maxLongitude },
-            //isActive: true, // To Filter is Active true events
+            isActive: true, // To Filter is Active true events
         };
 
         if (id && id !== '0') {

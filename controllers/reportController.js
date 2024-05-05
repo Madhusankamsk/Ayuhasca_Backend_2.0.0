@@ -35,42 +35,6 @@ const createReportController = async (req, res) => {
     }
 };
 
-const updateReportController = async (req, res) => {
-    try {
-        const { _id } = req.body;
-        const { report_user_id,
-            report_event_id,
-            event_created_user_id,
-            report_type,
-            report_message,
-        } = req.body;
-
-        const updatedReport = await Report.findByIdAndUpdate(
-            _id,
-            {
-                report_user_id,
-                report_event_id,
-                event_created_user_id,
-                report_type,
-                report_message,
-            },
-            { new: true }
-        );
-
-        res.status(200).json({
-            success: true,
-            message: 'Report updated successfully',
-            data: updatedReport,
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: 'Report update failed',
-            error: error.message,
-        });
-    }
-};
-
 const deleteReportController = async (req, res) => {
     try {
         const { id } = req.params;
@@ -123,7 +87,6 @@ const getReportByIdController = async (req, res) => {
 
 export {
     createReportController,
-    updateReportController,
     deleteReportController,
     getReportByIdController
 };

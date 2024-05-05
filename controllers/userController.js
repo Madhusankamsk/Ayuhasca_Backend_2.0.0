@@ -136,6 +136,7 @@ const getUserProfile = asyncHandler(async (req, res) => {
       birthday: user.birthday,
       bio: user.bio,
       profilePicture: user.profilePicture,
+      isAddFakeEvent: user.isAddFakeEvent,
 
     });
   } else {
