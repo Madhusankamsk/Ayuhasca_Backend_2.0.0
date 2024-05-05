@@ -69,7 +69,7 @@ const userSchema = mongoose.Schema(
     isAddFakeEvent:{
       type: Boolean,
       required: true,
-      default: 0,
+      default: false,
     },
   },
   {

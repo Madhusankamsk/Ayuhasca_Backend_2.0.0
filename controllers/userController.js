@@ -89,7 +89,8 @@ const registerUser = asyncHandler(async (req, res) => {
     password,
     birthday,
     profilePicture,
-    isgoogle
+    isgoogle,
+    isAddFakeEvent: false,
   });
 
   if (user) {

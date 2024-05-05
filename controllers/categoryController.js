@@ -119,9 +119,6 @@ const getCategoryNameByIdController = async (req, res) => {
     }
 };
 
-
-
-
 export {
     createCategoryController,
     updateCategoryController,

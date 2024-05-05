@@ -90,24 +90,6 @@ const deleteReportController = async (req, res) => {
     }
 }
 
-const getReportController = async (req, res) => {
-    try {
-        const report = await Report.find();
-
-        res.status(200).json({
-            success: true,
-            message: 'Report fetched successfully',
-            data: report,
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: 'Report fetching failed',
-            error: error.message,
-        });
-    }
-};
-
 const getReportByIdController = async (req, res) => {
     try {
         const { id } = req.params;
@@ -143,6 +125,5 @@ export {
     createReportController,
     updateReportController,
     deleteReportController,
-    getReportController,
     getReportByIdController
 };
