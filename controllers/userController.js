@@ -8,10 +8,19 @@ import nodemailer from 'nodemailer';
 // @access  Public
 const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
+  console.log("login email: ",email)
 
   const user = await User.findOne({ email });
+
+  if(!user){
+    res.status(500).json({
+      success: false,
+      message: 'This email is not signed up',
+    });
+  }
   console.log("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",generateToken(res,user._id))
 
+  console.log("user: ",user._id)
   if(user.isgoogle){
     res.status(500).json({
       success: false,
