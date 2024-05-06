@@ -237,12 +237,24 @@ const getMoments = asyncHandler(async (req, res) => {
             events = events.filter((event) => event.isToday && event.isLive);
         }
 
-     //   console.log(events);
+        // Filter out only the required fields from events array
+        const filteredEvents = events.map(({ _id, eventname, category, latitude, longitude, date, isLive, isToday }) => ({
+            _id,
+            eventname,
+            category,
+            latitude,
+            longitude,
+            date,
+            isLive,
+            isToday,
+        }));
+
+        console.log("Filter event data: ", filteredEvents);
 
         res.status(200).json({
             success: true,
             message: "Events fetched successfully",
-            data: events,
+            data: filteredEvents,
         });
     } catch (error) {
         res.status(500).json({
