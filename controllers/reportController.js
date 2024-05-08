@@ -10,24 +10,15 @@ const createReportController = async (req, res) => {
         } = req.body;
 
         console.log("report request body for create: "+ req.body)
-        let newReport;
-        if(report_message){
-            newReport = new Report({
-                report_user_id,
-                report_event_id,
-                event_created_user_id,
-                report_type,
-                report_message,
-            });
-        }else{
-            newReport = new Report({
-                report_user_id,
-                report_event_id,
-                event_created_user_id,
-                report_type,
-                report_message,
-            });
-        }
+
+        const newReport = new Report({
+            report_user_id,
+            report_event_id,
+            event_created_user_id,
+            report_type,
+            report_message,
+        });
+
         const savedReport = await newReport.save();
 
         res.status(201).json({
