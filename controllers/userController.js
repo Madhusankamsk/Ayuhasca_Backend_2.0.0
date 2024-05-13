@@ -44,10 +44,12 @@ const authUser = asyncHandler(async (req, res) => {
 const checkGoogleAuth = async (req, res) => {
   try {
       const { email } = req.body; // Extract email from the request body
+      console.log("Google auth email",email)
       const user = await User.findOne({ email });
 
       // Check if user exists
       if (!user) {
+        console.log("User is not exist")
           res.status(404).json({
             success : true,
             message: 'User not found or not authenticated with Google'
@@ -55,13 +57,14 @@ const checkGoogleAuth = async (req, res) => {
       } else if (user.isgoogle) {
           // If user is authenticated with Google
           console.log("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",generateToken(res,user._id))
-
+          console.log("User is exist")
           res.json({
               _id: user._id,
               token: generateToken(res,user._id) // Assuming generateToken only needs user's ID
           });
       } else {
           // If user exists but is not authenticated with Google
+          console.log("Existing user is sign up with other method")
           res.status(400).json({
             success : false,
             message: 'This email is not signed up with Google. Please use another method.'
