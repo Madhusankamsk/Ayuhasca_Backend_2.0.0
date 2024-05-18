@@ -8,25 +8,25 @@ import nodemailer from 'nodemailer';
 // @access  Public
 const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
-  console.log("login email: ",email)
+  console.log("login email: ", email)
 
   const user = await User.findOne({ email });
 
-  if(!user){
+  if (!user) {
     res.status(500).json({
       success: false,
       message: 'This email is not signed up',
     });
   }
-  console.log("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",generateToken(res,user._id))
+  console.log("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", generateToken(res, user._id))
 
-  console.log("user: ",user._id)
-  if(user.isgoogle){
+  console.log("user: ", user._id)
+  if (user.isgoogle) {
     res.status(500).json({
       success: false,
       message: 'This email is signed up with Google signin',
     });
-  }else{
+  } else {
     if (user && (await user.matchPassword(password))) {
       res.json({
         _id: user._id,
@@ -44,30 +44,27 @@ const authUser = asyncHandler(async (req, res) => {
 const checkGoogleAuth = async (req, res) => {
   try {
       const { email } = req.body; // Extract email from the request body
-      console.log("Google auth email",email)
       const user = await User.findOne({ email });
 
       // Check if user exists
       if (!user) {
-        console.log("User is not exist")
           res.status(404).json({
             success : true,
             message: 'User not found or not authenticated with Google'
           });
       } else if (user.isgoogle) {
           // If user is authenticated with Google
-          console.log("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",generateToken(res,user._id))
-          console.log("User is exist")
+        //  console.log("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",generateToken(res,user._id))
+
           res.json({
               _id: user._id,
               token: generateToken(res,user._id) // Assuming generateToken only needs user's ID
           });
       } else {
           // If user exists but is not authenticated with Google
-          console.log("Existing user is sign up with other method")
           res.status(400).json({
             success : false,
-            message: 'This email is not signed up with Google. Please use another method.'
+            message: 'This email is signed up with another method.'
           });
       }
   } catch (error) {
@@ -78,17 +75,18 @@ const checkGoogleAuth = async (req, res) => {
 
 
 
+
 // @desc    Register a new user
 // @route   POST /api/users
 // @access  Public
 const registerUser = asyncHandler(async (req, res) => {
-  const { firstName, lastName, email, password, birthday, profilePicture,isgoogle } = req.body;
+  const { firstName, lastName, email, password, birthday, profilePicture, isgoogle } = req.body;
   console.log(req.body)
   // console.log(req.body);
   const userExists = await User.findOne({ email });
 
   if (userExists) {
-    res.status(400).json({ 
+    res.status(400).json({
       success: false,
       message: 'User already exists',
     });
@@ -112,11 +110,11 @@ const registerUser = asyncHandler(async (req, res) => {
       email: user.email,
       token: generateToken(res, user._id),
     });
-   // console.log(res)
+    // console.log(res)
   } else {
     res.status(400).json({
       success: false,
-      message: 'Invalid user data',      
+      message: 'Invalid user data',
     });
   }
 });
@@ -249,7 +247,7 @@ const codes = {};
 const sendVerificationCode = asyncHandler(async (req, res) => {
   const { email } = req.body;
   console.log(email);
-  
+
   try {
     const user = await User.findOne({ email }); // Add await here
     // console.log(user);
@@ -342,7 +340,7 @@ const verifyCode = asyncHandler(async (req, res) => {
 //   try {
 //     // Find the user by email
 //     const user = await User.findOne({ email: email });
-    
+
 //     // Check if the user exists
 //     if (user) {
 //         // Set the new password and save the user
@@ -372,7 +370,7 @@ const resetPassword = asyncHandler(async (req, res) => {
   try {
     // Find the user by email
     const user = await User.findOne({ email: email });
-    
+
     // Check if the user exists
     if (user) {
       // Set the new password and save the user

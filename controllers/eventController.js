@@ -160,6 +160,7 @@ const getTiles = asyncHandler(async (req, res) => {
 
         // Sort events by distance
         events.sort((a, b) => a.distance - b.distance);
+        events = events.slice(0,5)
         //zoom in to get more events
         res.status(200).json({
             success: true,
