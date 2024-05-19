@@ -74,8 +74,66 @@ const getReportController = async (req, res) => {
     }
 };
 
+// const getEventReportController = async (req, res) => {
+//     try {
+//         const combinedQuery = [
+//             {
+//                 $lookup: {
+//                     from: 'reports',
+//                     let: { eventID: '$_id' },
+//                     pipeline: [
+//                         {
+//                             $match: {
+//                                 $expr: { $eq: ['$report_event_id', '$$eventID'] },
+//                             },
+//                         },
+//                         {
+//                             $project: {
+//                                 report_user_id: 1,
+//                                 report_type: 1,
+//                                 report_message: 1,
+//                                 _id: 0,
+//                             },
+//                         },
+//                     ],
+//                     as: 'reports',
+//                 },
+//             },
+//             {
+//                 $addFields: {
+//                     report_count: { $size: '$reports' },
+//                 },
+//             },
+//             {
+//                 $sort: { report_count: -1 } 
+//             },
+//         ];
+
+//         const eventsWithReport = await Event.aggregate(combinedQuery);
+//         console.log(eventsWithReport);
+
+//         res.status(200).json({
+//             success: true,
+//             message: 'Events fechiching with reports',
+//             data: eventsWithReport,
+//         });
+//     } catch (error) {
+//         res.status(500).json({
+//             success: false,
+//             message: 'event fetching failed',
+//             error: error.message,
+//         });
+//     }
+// };
+
 const getEventReportController = async (req, res) => {
     try {
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 3;
+        const startIndex = (page - 1) * limit;
+        console.log("page number: "+ page);
+        console.log(" startIndex : "+ startIndex );
+
         const combinedQuery = [
             {
                 $lookup: {
@@ -105,32 +163,34 @@ const getEventReportController = async (req, res) => {
                 },
             },
             {
-                $project: {
-                    _id: 1,
-                    publisherId: 1,
-                    eventname: 1,
-                    category: 1,
-                    reports: 1,
-                    report_count: 1,
-                },
+                $sort: { report_count: -1 },
             },
-            {
-                $sort: { report_count: -1 } 
-            },
+            // {
+            //     $skip: startIndex,
+            // },
+            // {
+            //     $limit: limit,
+            // },
         ];
 
         const eventsWithReport = await Event.aggregate(combinedQuery);
-        console.log(eventsWithReport);
+        const eventsFeed = eventsWithReport.slice(startIndex, startIndex + limit);
+        console.log(eventsFeed);
+        const totalEvents = await Event.countDocuments();
+        const totalPages = Math.ceil(totalEvents / limit);
 
         res.status(200).json({
             success: true,
-            message: 'Events fechiching with reports',
-            data: eventsWithReport,
+            message: 'Events fetched with reports',
+            data: eventsFeed,
+            page,
+            totalPages,
+            limit,
         });
     } catch (error) {
         res.status(500).json({
             success: false,
-            message: 'event fetching failed',
+            message: 'Event fetching failed',
             error: error.message,
         });
     }
@@ -188,9 +248,41 @@ const blockEventAddEvent = async (req, res) => {
     }
 };
 
+
+const whereIsUsers = async (req, res) => {
+    try {
+        const users = await User.find({}, 'currentLatitude currentLongitude birthday');
+        
+        const userLocationsAndAges = users.map(user => {
+            const ageDifMs = Date.now() - new Date(user.birthday).getTime();
+            const ageDate = new Date(ageDifMs); // miliseconds from epoch
+            const age = Math.abs(ageDate.getUTCFullYear() - 1970);
+
+            return {
+                latitude: user.currentLatitude,
+                longitude: user.currentLongitude,
+                age: age,
+            };
+        });
+
+        res.status(200).json({
+            success: true,
+            data: userLocationsAndAges,
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Failed to retrieve user locations and ages',
+            error: error.message,
+        });
+    }
+};
+
+
 export {
     getReportController,
     getEventReportController,
     blockEventController,
-    blockEventAddEvent
+    blockEventAddEvent,
+    whereIsUsers
 };
