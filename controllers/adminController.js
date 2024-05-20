@@ -74,65 +74,16 @@ const getReportController = async (req, res) => {
     }
 };
 
-// const getEventReportController = async (req, res) => {
-//     try {
-//         const combinedQuery = [
-//             {
-//                 $lookup: {
-//                     from: 'reports',
-//                     let: { eventID: '$_id' },
-//                     pipeline: [
-//                         {
-//                             $match: {
-//                                 $expr: { $eq: ['$report_event_id', '$$eventID'] },
-//                             },
-//                         },
-//                         {
-//                             $project: {
-//                                 report_user_id: 1,
-//                                 report_type: 1,
-//                                 report_message: 1,
-//                                 _id: 0,
-//                             },
-//                         },
-//                     ],
-//                     as: 'reports',
-//                 },
-//             },
-//             {
-//                 $addFields: {
-//                     report_count: { $size: '$reports' },
-//                 },
-//             },
-//             {
-//                 $sort: { report_count: -1 } 
-//             },
-//         ];
-
-//         const eventsWithReport = await Event.aggregate(combinedQuery);
-//         console.log(eventsWithReport);
-
-//         res.status(200).json({
-//             success: true,
-//             message: 'Events fechiching with reports',
-//             data: eventsWithReport,
-//         });
-//     } catch (error) {
-//         res.status(500).json({
-//             success: false,
-//             message: 'event fetching failed',
-//             error: error.message,
-//         });
-//     }
-// };
-
 const getEventReportController = async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 3;
         const startIndex = (page - 1) * limit;
-        console.log("page number: "+ page);
-        console.log(" startIndex : "+ startIndex );
+        console.log("page number: " + page);
+        console.log(" startIndex : " + startIndex);
+        const search = req.query.search;
+        console.log("Search Item: " + search)
+
 
         const combinedQuery = [
             {
@@ -165,13 +116,22 @@ const getEventReportController = async (req, res) => {
             {
                 $sort: { report_count: -1 },
             },
-            // {
-            //     $skip: startIndex,
-            // },
-            // {
-            //     $limit: limit,
-            // },
         ];
+
+        // Add search filter if search query is provided
+        if (search) {
+            combinedQuery.unshift({
+                $match: {
+                    $or: [
+                        { eventname: { $regex: '(^|\\b)' + search, $options: 'i' } },
+                        { features: { $elemMatch: { $regex: '(^|\\b)' + search, $options: 'i' } } },
+                        { location: { $regex: '(^|\\b)' + search, $options: 'i' } },
+                        { publisherName: { $regex: '(^|\\b)' + search, $options: 'i' } },
+                        { publisherId: { $regex: '(^|\\b)' + search, $options: 'i' } },
+                    ]
+                }
+            });
+        }
 
         const eventsWithReport = await Event.aggregate(combinedQuery);
         const eventsFeed = eventsWithReport.slice(startIndex, startIndex + limit);
@@ -252,7 +212,7 @@ const blockEventAddEvent = async (req, res) => {
 const whereIsUsers = async (req, res) => {
     try {
         const users = await User.find({}, 'currentLatitude currentLongitude birthday');
-        
+
         const userLocationsAndAges = users.map(user => {
             const ageDifMs = Date.now() - new Date(user.birthday).getTime();
             const ageDate = new Date(ageDifMs); // miliseconds from epoch
