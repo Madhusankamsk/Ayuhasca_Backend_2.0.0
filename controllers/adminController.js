@@ -82,10 +82,16 @@ const getEventReportController = async (req, res) => {
         console.log("page number: " + page);
         console.log(" startIndex : " + startIndex);
         const search = req.query.search;
-        console.log("Search Item: " + search)
-
+        console.log("Search Item: " + search);
+        const activeStatus = req.query.activeStatus === 'true';
+        console.log("activeStatus: " + activeStatus);
 
         const combinedQuery = [
+            {
+                $match: {
+                    isActive: activeStatus,
+                },
+            },
             {
                 $lookup: {
                     from: 'reports',
