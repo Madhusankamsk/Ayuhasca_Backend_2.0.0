@@ -96,7 +96,7 @@ new CronJob('0 8 * * *', async function () {
 
 
 
-new CronJob('50 11 * * *', async function () {
+new CronJob('45 11 * * *', async function () {
   console.log('Sending "Hello boys" notification to all users.');
 
   const users = await User.find({});
@@ -109,7 +109,7 @@ new CronJob('50 11 * * *', async function () {
         {
           to: userNotificationToken,
           sound: 'default',
-          body: 'Hello boys',
+          body: 'ඔයාගේ ගමේ තියන දන්සලුත් Ayuhasca App එකේ නැත්නම්, දන්සල් වඳින්න යන්න කලින් මතක් කරලා ඒවත් App එකට Add කරලා, පරීස්සමට වෙසක් සමරලා ගෙදර එන්න.. ❤ දන්සැල් Add කරන විදිය අපේ Facebook page එකේ..',
           data: { withSome: 'data' },
         },
       ];
