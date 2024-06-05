@@ -4,7 +4,8 @@ import {
     updateCategoryController,
     deleteCategoryController,
     getCategoryController,
-    getCategoryNameByIdController
+    getCategoryNameByIdController,
+    createMultipleCategoriesController
 } from "../controllers/categoryController.js"; 
 const router = express.Router();
 
@@ -13,5 +14,6 @@ router.put("/updateCategory", updateCategoryController);
 router.delete("/deleteCategory/:id", deleteCategoryController);
 router.get("/getCategory", getCategoryController);
 router.get("/getCategoryNameById/:id", getCategoryNameByIdController);
+router.post("/createMultipleCategories", createMultipleCategoriesController);
 
 export default router;

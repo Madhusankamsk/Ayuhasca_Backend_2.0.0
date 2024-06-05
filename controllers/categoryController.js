@@ -119,10 +119,43 @@ const getCategoryNameByIdController = async (req, res) => {
     }
 };
 
+const createMultipleCategoriesController = async (req, res) => {
+    try {
+        const categoriesList = req.body.categoriesList;
+
+        const savedCategories = [];
+        for (const category of categoriesList) {
+            const { name, id, marker_image } = category;
+
+            const newCategory = new EventCatecories({
+                name,
+                id,
+                marker_image,
+            });
+
+            const savedCategory = await newCategory.save();
+            savedCategories.push(savedCategory);
+        }
+
+        res.status(201).json({
+            success: true,
+            message: 'Categories created successfully',
+            data: savedCategories,
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Categories creation failed',
+            error: error.message,
+        });
+    }
+};
+
 export {
     createCategoryController,
     updateCategoryController,
     deleteCategoryController,
     getCategoryController,
-    getCategoryNameByIdController
+    getCategoryNameByIdController,
+    createMultipleCategoriesController
 };
