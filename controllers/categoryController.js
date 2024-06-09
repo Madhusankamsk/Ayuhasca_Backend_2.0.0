@@ -1,3 +1,4 @@
+//catergories controller,
 import EventCatecories from "../models/eventCatecories.js";
 
 const createCategoryController = async (req, res) => {
