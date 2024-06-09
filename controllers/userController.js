@@ -1,30 +1,31 @@
-import asyncHandler from 'express-async-handler';
-import User from '../models/userModel.js';
-import generateToken from '../utils/generateToken.js';
-import nodemailer from 'nodemailer';
+import asyncHandler from "express-async-handler";
+import User from "../models/userModel.js";
+import generateToken from "../utils/generateToken.js";
+import nodemailer from "nodemailer";
+import dotenv from "dotenv";
 
 // @desc    Auth user & get token
 // @route   POST /api/users/auth
 // @access  Public
 const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
-  console.log("login email: ", email)
+  console.log("login email: ", email);
 
   const user = await User.findOne({ email });
 
   if (!user) {
     res.status(500).json({
       success: false,
-      message: 'This email is not signed up',
+      message: "This email is not signed up",
     });
   }
-  console.log("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", generateToken(res, user._id))
+  console.log("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", generateToken(res, user._id));
 
-  console.log("user: ", user._id)
+  console.log("user: ", user._id);
   if (user.isgoogle) {
     res.status(500).json({
       success: false,
-      message: 'This email is signed up with Google signin',
+      message: "This email is signed up with Google signin",
     });
   } else {
     if (user && (await user.matchPassword(password))) {
@@ -36,59 +37,63 @@ const authUser = asyncHandler(async (req, res) => {
       });
     } else {
       res.status(401);
-      throw new Error('Invalid email or password');
+      throw new Error("Invalid email or password");
     }
   }
 });
 
 const checkGoogleAuth = async (req, res) => {
   try {
-      const { email } = req.body; // Extract email from the request body
-      const user = await User.findOne({ email });
+    const { email } = req.body; // Extract email from the request body
+    const user = await User.findOne({ email });
 
-      // Check if user exists
-      if (!user) {
-          res.status(404).json({
-            success : true,
-            message: 'User not found or not authenticated with Google'
-          });
-      } else if (user.isgoogle) {
-          // If user is authenticated with Google
-        //  console.log("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",generateToken(res,user._id))
+    // Check if user exists
+    if (!user) {
+      res.status(404).json({
+        success: true,
+        message: "User not found or not authenticated with Google",
+      });
+    } else if (user.isgoogle) {
+      // If user is authenticated with Google
+      //  console.log("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",generateToken(res,user._id))
 
-          res.json({
-              _id: user._id,
-              token: generateToken(res,user._id) // Assuming generateToken only needs user's ID
-          });
-      } else {
-          // If user exists but is not authenticated with Google
-          res.status(400).json({
-            success : false,
-            message: 'This email is signed up with another method.'
-          });
-      }
+      res.json({
+        _id: user._id,
+        token: generateToken(res, user._id), // Assuming generateToken only needs user's ID
+      });
+    } else {
+      // If user exists but is not authenticated with Google
+      res.status(400).json({
+        success: false,
+        message: "This email is signed up with another method.",
+      });
+    }
   } catch (error) {
-      res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: "Internal server error" });
   }
 };
-
-
-
-
 
 // @desc    Register a new user
 // @route   POST /api/users
 // @access  Public
 const registerUser = asyncHandler(async (req, res) => {
-  const { firstName, lastName, email, password, birthday, profilePicture, isgoogle } = req.body;
-  console.log(req.body)
+  const {
+    firstName,
+    lastName,
+    email,
+    password,
+    birthday,
+    profilePicture,
+    isgoogle,
+  } = req.body;
+  console.log(req.body);
   // console.log(req.body);
   const userExists = await User.findOne({ email });
 
   if (userExists) {
     res.status(400).json({
       success: false,
-      message: 'User already exists',
+      message: "User already exists",
     });
   }
 
@@ -114,7 +119,7 @@ const registerUser = asyncHandler(async (req, res) => {
   } else {
     res.status(400).json({
       success: false,
-      message: 'Invalid user data',
+      message: "Invalid user data",
     });
   }
 });
@@ -123,11 +128,11 @@ const registerUser = asyncHandler(async (req, res) => {
 // @route   POST /api/users/logout
 // @access  Public
 const logoutUser = (req, res) => {
-  res.cookie('jwt', '', {
+  res.cookie("jwt", "", {
     httpOnly: true,
     expires: new Date(0),
   });
-  res.status(200).json({ message: 'Logged out successfully' });
+  res.status(200).json({ message: "Logged out successfully" });
 };
 
 // @desc    Get user profile
@@ -147,11 +152,10 @@ const getUserProfile = asyncHandler(async (req, res) => {
       bio: user.bio,
       profilePicture: user.profilePicture,
       isAddFakeEvent: user.isAddFakeEvent,
-
     });
   } else {
     res.status(404);
-    throw new Error('User not found');
+    throw new Error("User not found");
   }
 });
 
@@ -160,16 +164,20 @@ const getUserProfile = asyncHandler(async (req, res) => {
 // @access  Private
 const updateUserProfile = asyncHandler(async (req, res) => {
   const { id, firstName, bio, lastName, birthday, profilePicture } = req.body;
-  console.log(req.body)
+  console.log(req.body);
   try {
-    const user = await User.findByIdAndUpdate(id, {
-      firstName: firstName,
-      lastName: lastName,
-      birthday: birthday,
-      bio: bio,
-      profilePicture: profilePicture,
-    }, { new: true });
-    console.log(user)
+    const user = await User.findByIdAndUpdate(
+      id,
+      {
+        firstName: firstName,
+        lastName: lastName,
+        birthday: birthday,
+        bio: bio,
+        profilePicture: profilePicture,
+      },
+      { new: true }
+    );
+    console.log(user);
     res.status(200).json({
       _id: user._id,
       firstname: user.firstName,
@@ -181,20 +189,24 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     });
   } catch (error) {
     res.status(404);
-    throw new Error('User not found');
+    throw new Error("User not found");
   }
 });
 
-
 const updateUserProfileNotification = asyncHandler(async (req, res) => {
-  const { _id, notificationtoken, currentLatitude, currentLongitude } = req.body;
+  const { _id, notificationtoken, currentLatitude, currentLongitude } =
+    req.body;
   try {
-    const user = await User.findByIdAndUpdate(_id, {
-      notificationtoken: notificationtoken,
-      currentLatitude: currentLatitude,
-      currentLongitude: currentLongitude,
-    }, { new: true });
-    console.log(user)
+    const user = await User.findByIdAndUpdate(
+      _id,
+      {
+        notificationtoken: notificationtoken,
+        currentLatitude: currentLatitude,
+        currentLongitude: currentLongitude,
+      },
+      { new: true }
+    );
+    console.log(user);
     res.status(200).json({
       _id: user._id,
       firstname: user.firstName,
@@ -209,10 +221,9 @@ const updateUserProfileNotification = asyncHandler(async (req, res) => {
     });
   } catch (error) {
     res.status(404);
-    throw new Error('User not found');
+    throw new Error("User not found");
   }
 });
-
 
 async function mailer(recieveremail, code) {
   // console.log("Mailer function called");
@@ -229,14 +240,13 @@ async function mailer(recieveremail, code) {
     },
   });
 
-
   let info = await transporter.sendMail({
     from: "GeekChat",
     to: `${recieveremail}`,
     subject: "Email Verification",
     text: `Your Verification Code is ${code}`,
     html: `<b>Your Verification Code is ${code}</b>`,
-  })
+  });
 
   console.log("Message sent: %s", info.messageId);
   console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
@@ -274,14 +284,13 @@ const sendVerificationCode = asyncHandler(async (req, res) => {
       });
     }
   } catch (error) {
-    console.error('Error:', error);
+    console.error("Error:", error);
     res.status(500).json({
       success: false,
       message: "An error occurred while sending the verification code",
     });
   }
 });
-
 
 // const sendVerificationCode = asyncHandler(async (req, res) => {
 //   const { email } = req.body;
@@ -321,18 +330,15 @@ const verifyCode = asyncHandler(async (req, res) => {
       res.status(200).json({
         message: "Code Verified",
       });
-    }
-    else {
+    } else {
       res.status(404);
-      throw new Error('Code not verified');
+      throw new Error("Code not verified");
     }
-  }
-  catch (error) {
+  } catch (error) {
     res.status(404);
-    throw new Error('User not found');
+    throw new Error("User not found");
   }
 });
-
 
 // const resetPassword = asyncHandler(async (req, res) => {
 //   const { email, newPassword } = req.body;
@@ -390,31 +396,52 @@ const resetPassword = asyncHandler(async (req, res) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: 'Password reset failed',
+      message: "Password reset failed",
     });
   }
 });
 
-export default resetPassword;
-
-
+const versionChecker = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  let showPopUp = false
+  const pictureLink = "link 0"
+  const updateButton = "https://play.google.com/store/apps/details?id=com.madhusanka.Kuubi&pli=1"
+  const cancelButton = true
+  try {
+    if (process.env.CURRENT_VERSION_CODE == id) {
+      showPopUp = false
+      res.status(200).json({
+        success: true,
+        message: "Version code is matching",
+        data : {showPopUp,pictureLink,updateButton,cancelButton}
+      });
+    } else {
+      showPopUp = true
+      res.status(200).json({
+        success: true,
+        message: "Version code is matching",
+        data : {showPopUp,pictureLink,updateButton,cancelButton}
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Version Verification is not complete",
+    });
+  }
+});
 
 
 export {
   authUser,
   registerUser,
   logoutUser,
+  versionChecker,
   getUserProfile,
   updateUserProfile,
   sendVerificationCode,
   verifyCode,
   resetPassword,
   updateUserProfileNotification,
-  checkGoogleAuth
+  checkGoogleAuth,
 };
-
-
-
-
-
-
