@@ -96,46 +96,46 @@ new CronJob('0 8 * * *', async function () {
 
 
 
-new CronJob('45 11 * * *', async function () {
-  console.log('Sending "Hello boys" notification to all users.');
+// new CronJob('45 11 * * *', async function () {
+//   console.log('Sending "Hello boys" notification to all users.');
 
-  const users = await User.find({});
+//   const users = await User.find({});
 
-  const sendNotification = async (user) => {
-    const userNotificationToken = user.notificationtoken;
-    if (userNotificationToken) {
-      console.log('Sending notification to user:', userNotificationToken);
-      const messages = [
-        {
-          to: userNotificationToken,
-          sound: 'default',
-          body: 'ඔයාගේ ගමේ තියන දන්සලුත් Ayuhasca App එකේ නැත්නම්, දන්සල් වඳින්න යන්න කලින් මතක් කරලා ඒවත් App එකට Add කරලා, පරීස්සමට වෙසක් සමරලා ගෙදර එන්න.. ❤ දන්සැල් Add කරන විදිය අපේ Facebook page එකේ..',
-          data: { withSome: 'data' },
-        },
-      ];
+//   const sendNotification = async (user) => {
+//     const userNotificationToken = user.notificationtoken;
+//     if (userNotificationToken) {
+//       console.log('Sending notification to user:', userNotificationToken);
+//       const messages = [
+//         {
+//           to: userNotificationToken,
+//           sound: 'default',
+//           body: 'ඔයාගේ ගමේ තියන දන්සලුත් Ayuhasca App එකේ නැත්නම්, දන්සල් වඳින්න යන්න කලින් මතක් කරලා ඒවත් App එකට Add කරලා, පරීස්සමට වෙසක් සමරලා ගෙදර එන්න.. ❤ දන්සැල් Add කරන විදිය අපේ Facebook page එකේ..',
+//           data: { withSome: 'data' },
+//         },
+//       ];
 
-      const expo = new Expo({ accessToken: process.env.EXPO_ACCESS_TOKEN });
-      const chunks = expo.chunkPushNotifications(messages);
-      const tickets = [];
+//       const expo = new Expo({ accessToken: process.env.EXPO_ACCESS_TOKEN });
+//       const chunks = expo.chunkPushNotifications(messages);
+//       const tickets = [];
 
-      for (const chunk of chunks) {
-        try {
-          const ticketChunk = await expo.sendPushNotificationsAsync(chunk);
-          console.log(ticketChunk);
-          tickets.push(...ticketChunk);
-        } catch (error) {
-          console.error(error);
-        }
-      }
-    } else {
-      console.log('Notification token not found or empty for user:', user._id);
-    }
-  };
+//       for (const chunk of chunks) {
+//         try {
+//           const ticketChunk = await expo.sendPushNotificationsAsync(chunk);
+//           console.log(ticketChunk);
+//           tickets.push(...ticketChunk);
+//         } catch (error) {
+//           console.error(error);
+//         }
+//       }
+//     } else {
+//       console.log('Notification token not found or empty for user:', user._id);
+//     }
+//   };
 
-  users.forEach(async (user) => {
-    await sendNotification(user);
-  });
-}, null, true, 'Asia/Kolkata');
+//   users.forEach(async (user) => {
+//     await sendNotification(user);
+//   });
+// }, null, true, 'Asia/Kolkata');
 
 
 

@@ -208,7 +208,7 @@ const getMoments = asyncHandler(async (req, res) => {
         const maxLongitude = longitude + longitudeDelta;
 
         const query = {
-            date: selectedDate ? selectedDate : { $gte: new Date().toISOString().slice(0, 10) },
+            date: selectedDate ? selectedDate : { $gte: userDate },
             latitude: { $gte: minLatitude, $lte: maxLatitude },
             longitude: { $gte: minLongitude, $lte: maxLongitude },
             isActive: true, // To Filter is Active true events
