@@ -1150,7 +1150,4 @@ const goinglistController = asyncHandler(async (req, res) => {
     console.log(goingListData);
 });
 
-
-
-
 export { addMoment,getTiles, getMoments, editPostOfUser, goinglistController, feedbackController, getEachMoment, getPost, likeUpdate, deletePost, disLikeUpdate, getMyMoments, deleteEvent, createPost, getPostFeed, getUserDetails, getWholePosts, interestedUpdate, goingUpdate, contribute, selectLeaderBoard, reactToPhoto, updateEvents, searchEvents, sendNotification };
