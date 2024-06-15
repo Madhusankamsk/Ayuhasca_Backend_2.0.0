@@ -408,13 +408,12 @@ const versionChecker = asyncHandler(async (req, res) => {
   let showPopUp = false;
   const showCloseButton = true;
   const topLeftText = "Ayuhasca Message";
-  const buttonText = "Click";
+  const buttonText = "Click";   // do not enter "Retry" as button name
   const buttonColor = "#FFFFFF";
   const buttonTextColor = "#834EFF";
   const imageUrl = "https://firebasestorage.googleapis.com/v0/b/kuubi-c55eb.appspot.com/o/images%2F1707757602932.jpeg?alt=media&token=9ac5c2b4-5afe-435f-806e-90de95675dbd";
   const showEngageButton = true;
-  //const engageButtonLink = "https://play.google.com/store/apps/details?id=com.madhusanka.Kuubi&pcampaignid=web_share"
-  const engageButtonLink = "https://www.youtube.com"
+  const engageButtonLink = "https://play.google.com/store/apps/details?id=com.madhusanka.Kuubi&pcampaignid=web_share"
   const imageLink = "https://l.facebook.com/l.php?u=https%3A%2F%2Fwww.atlassian.com%2Fsoftware%2Fjira%3Futm_source%3Dfacebook%26utm_medium%3Dpaid-social%26utm_campaign%3DP%253Ajira%257CO%253Appm%257CV%253Afacebook%257CF%253Aconsider%257CG%253Arow%26utm_content%3DP%253Ajira%257CO%253Appm%257CV%253Afacebook%257CF%253Aconsider%257CG%253Arow%257CL%253Aen%257CT%253Aretargeting%257CA%253Aalla%257CD%253Aalld%257CU%253Ahomepage_image-features-template-template-everyworkflow-pac-na-na-choose%26utm_campaignid%3D120209026284820764%26utm_adgroupid%3D120209026286610764%26utm_adid%3D120209026308940764%26utm_id%3D120209026284820764%26utm_term%3D120209026286610764%26fbclid%3DIwAR1QORQJvcR2l0xM_c8h7sgRcqhXmnCgel0uc_tiGMCpb405xswl60K1nd4_aem_AeezlMPFBlC0deJiM1eBlzgmCfmS40armOGyozpSxW36YrQ3Jq3J8KYEbf1ld1F_Ls0FlAGAFQdv0sKa6cYty1Lf&h=AT1I1nbV8KmFIm32Pz0FLLJHmUa-Tvn3sYA4TPwvvXUCypSsyLSJNgD486q0qEyFJEWfbBaBkUT4I8bnPNztB7C8wjEOHA0hVsmnnYnWvFJvH-E7BEHpcEe-l4V5cLGoNdmD6I_c6YEG1OnvlrnCPA&__tn__=*I&c[0]=AT26Z4tmGvLDzlBQp5t7t09RvGi6jqwaFax7y0M7mrD2DCaQ4GXcmTuH5lEGtWgD64k_s3vZrH4APETZWzk2kJx8Zuf35HU8ZMcp9D5Ou1hU9PrHIsDa1Z7-5k1RJ7edre3zG1c6lepBy8xKqHqwk9Z0AXt8D3gUPHHv4coarXkr1uKLct4mhiPkJN8pOOy_Ux07ymkVhhMLz1faFaF33MRvoA";
   const showVideo = false;
   const isYouTubeVideo = true;
