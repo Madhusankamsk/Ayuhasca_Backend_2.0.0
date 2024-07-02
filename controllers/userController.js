@@ -403,7 +403,7 @@ const resetPassword = asyncHandler(async (req, res) => {
 
 const versionChecker = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  
+
   // Define all the parameters
   let showPopUp = false;
   const showCloseButton = true;
@@ -480,9 +480,30 @@ const versionChecker = asyncHandler(async (req, res) => {
 });
 
 const dataDelete = asyncHandler(async (req, res) => {
-  const { id } = req.body;
+  const { id, email } = req.body;
   console.log(req.body);
   try {
+    // Check if the user exists
+    const existingUserByEmail = await User.findOne({ email: email });
+
+    if (!existingUserByEmail) {
+      res.status(404);
+      throw new Error("User not found. Invalid Email");
+    }
+
+    const existingUserById = await User.findOne({ _id: id });
+
+    if (!existingUserById) {
+      res.status(404);
+      throw new Error("User not found.Invalid User ID");
+    }
+
+    // Check if the users are the same
+    if (existingUserByEmail._id.toString() !== existingUserById._id.toString()) {
+      res.status(400);
+      throw new Error("Supplied ID and email do not match!!!");
+    }
+
     const user = await User.findByIdAndUpdate(
       id,
       {
@@ -501,13 +522,33 @@ const dataDelete = asyncHandler(async (req, res) => {
       profilePicture: user.profilePicture,
     });
   } catch (error) {
-    res.status(404);
-    throw new Error("User not found");
+    res.status(500).json({ message: error.message });
   }
 });
 
 const accountDelete = asyncHandler(async (req, res) => {
-  const { id } = req.body;
+  const { id, email } = req.body;
+
+  const existingUserByEmail = await User.findOne({ email: email });
+
+  if (!existingUserByEmail) {
+    res.status(404);
+    throw new Error("User not found. Invalid Email");
+  }
+
+  const existingUserById = await User.findOne({ _id: id });
+
+  if (!existingUserById) {
+    res.status(404);
+    throw new Error("User not found.Invalid User ID");
+  }
+
+  // Check if the users are the same
+  if (existingUserByEmail._id.toString() !== existingUserById._id.toString()) {
+    res.status(400);
+    throw new Error("Supplied ID and email do not match!!!");
+  }
+
   console.log(req.body);
   try {
     const user = await User.findByIdAndUpdate(
@@ -528,8 +569,7 @@ const accountDelete = asyncHandler(async (req, res) => {
       profilePicture: user.profilePicture,
     });
   } catch (error) {
-    res.status(404);
-    throw new Error("User not found");
+    res.status(500).json({ message: error.message });
   }
 });
 
