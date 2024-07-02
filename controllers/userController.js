@@ -479,6 +479,60 @@ const versionChecker = asyncHandler(async (req, res) => {
   }
 });
 
+const dataDelete = asyncHandler(async (req, res) => {
+  const { id } = req.body;
+  console.log(req.body);
+  try {
+    const user = await User.findByIdAndUpdate(
+      id,
+      {
+        isRequestDataDelete: true
+      },
+      { new: true }
+    );
+    console.log(user);
+    res.status(202).json({
+      _id: user._id,
+      firstname: user.firstName,
+      lastname: user.lastName,
+      email: user.email,
+      birthday: user.birthday,
+      bio: user.bio,
+      profilePicture: user.profilePicture,
+    });
+  } catch (error) {
+    res.status(404);
+    throw new Error("User not found");
+  }
+});
+
+const accountDelete = asyncHandler(async (req, res) => {
+  const { id } = req.body;
+  console.log(req.body);
+  try {
+    const user = await User.findByIdAndUpdate(
+      id,
+      {
+        isRequestAccountDelete: true
+      },
+      { new: true }
+    );
+    console.log(user);
+    res.status(202).json({
+      _id: user._id,
+      firstname: user.firstName,
+      lastname: user.lastName,
+      email: user.email,
+      birthday: user.birthday,
+      bio: user.bio,
+      profilePicture: user.profilePicture,
+    });
+  } catch (error) {
+    res.status(404);
+    throw new Error("User not found");
+  }
+});
+
 
 export {
   authUser,
@@ -492,4 +546,6 @@ export {
   resetPassword,
   updateUserProfileNotification,
   checkGoogleAuth,
+  dataDelete,
+  accountDelete
 };

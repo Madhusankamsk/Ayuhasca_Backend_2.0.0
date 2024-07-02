@@ -10,7 +10,9 @@ import {
   verifyCode,
   updateUserProfileNotification,
   versionChecker,
-  checkGoogleAuth
+  checkGoogleAuth,
+  accountDelete,
+  dataDelete
 } from '../controllers/userController.js';
 import { protect } from '../middleware/authMiddleware.js';
 
@@ -29,5 +31,8 @@ router.post('/reset',resetPassword);
 router.post('/email',checkGoogleAuth);
   // .get(protect, getUserProfile)
   // .put(protect, updateUserProfile);
+
+router.put('/accountdeleterequest',accountDelete); // New two request to the resolve play store issue
+router.put('/deleterequest',dataDelete);
 
 export default router;

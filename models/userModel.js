@@ -71,6 +71,16 @@ const userSchema = mongoose.Schema(
       required: true,
       default: false,
     },
+    isRequestDataDelete:{
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+    isRequestAccountDelete:{
+      type: Boolean,
+      required: true,
+      default: false,
+    },
   },
   {
     timestamps: true,
