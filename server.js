@@ -14,6 +14,7 @@ import { CronJob } from 'cron';
 import User from './models/userModel.js';
 import Event from './models/eventModel.js';
 import { Expo } from 'expo-server-sdk';
+import poiRoutes from './routes/poiRouter.js';
 
 const port = process.env.PORT || 5000;
 
@@ -28,9 +29,9 @@ app.use(cookieParser());
 
 app.use('/api/users', userRoutes);
 app.use('/api/events', addMomentRoutes);
+app.use('/api/poi', poiRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/report', reportRoutes);
-
 app.use('/admin/report', adminRoutes);
 
 new CronJob('0 8 * * *', async function () {
