@@ -6,6 +6,10 @@ const pointSchema = mongoose.Schema(
             type: String,
             required: true,
         },
+        publisherName: {
+            type: String,
+            required: true,
+        },
         name: {
             type: String,
             required: true,

@@ -15,6 +15,7 @@ import User from './models/userModel.js';
 import Event from './models/eventModel.js';
 import { Expo } from 'expo-server-sdk';
 import poiRoutes from './routes/poiRouter.js';
+import poiCategoryRoutes from './routes/poiCategoryRouter.js';
 
 const port = process.env.PORT || 5000;
 
@@ -29,10 +30,11 @@ app.use(cookieParser());
 
 app.use('/api/users', userRoutes);
 app.use('/api/events', addMomentRoutes);
-app.use('/api/poi', poiRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/report', reportRoutes);
 app.use('/admin/report', adminRoutes);
+app.use('/api/poi_categories', poiCategoryRoutes);
+app.use('/api/poi', poiRoutes);
 
 new CronJob('0 8 * * *', async function () {
   console.log('You will see this message every minute');
