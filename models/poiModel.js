@@ -18,7 +18,7 @@ const pointSchema = mongoose.Schema(
             type: String,
             required: true,
         },
-        opentime: {
+        openTime: {
             type: String,
             required: true,
         },
@@ -55,8 +55,7 @@ const pointSchema = mongoose.Schema(
             default: [],
         },
         gallery: {
-            type: [String],
-            default: [],
+            type: String,
         },
         isActive: {
             type: Boolean,

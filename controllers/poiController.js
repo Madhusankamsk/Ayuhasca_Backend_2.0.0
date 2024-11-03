@@ -89,12 +89,17 @@ const getPOIs = asyncHandler(async (req, res) => {
         pois = await Poi.find(query).exec();
 
         // Filter out only the required fields from events array
-        const filteredPois = pois.map(({ _id, name, category, latitude, longitude }) => ({
+        const filteredPois = pois.map(({ _id, name, category, latitude, longitude, openTime, closeTime, locationText, description, gallery }) => ({
             _id,
             name,
             category,
+            openTime,
+            closeTime,
+            locationText,
             latitude,
             longitude,
+            description,
+            gallery
         }));
 
         console.log("Filter poi data: ", filteredPois);
